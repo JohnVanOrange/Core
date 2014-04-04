@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\jvo;
+namespace JohnVanOrange\core;
 
 require_once('../vendor/autoload.php');
 require_once('../settings.inc');
