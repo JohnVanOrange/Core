@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c706afd37fce875576a1801c08b437fe",
+    "hash": "fd5dc589e322036ad8a44efcfc3e85a1",
     "packages": [
         {
             "name": "davewid/peyote",
@@ -108,17 +108,16 @@
         },
         {
             "name": "rych/bytesize",
-            "version": "dev-master",
-            "target-dir": "Rych/ByteSize",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rchouinard/bytesize.git",
-                "reference": "38d25745980f3e2605ea49e01304f261aa6ddf15"
+                "reference": "297e16ea047461b91e8d7eb90aa46aaa52917824"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rchouinard/bytesize/zipball/38d25745980f3e2605ea49e01304f261aa6ddf15",
-                "reference": "38d25745980f3e2605ea49e01304f261aa6ddf15",
+                "url": "https://api.github.com/repos/rchouinard/bytesize/zipball/297e16ea047461b91e8d7eb90aa46aaa52917824",
+                "reference": "297e16ea047461b91e8d7eb90aa46aaa52917824",
                 "shasum": ""
             },
             "require": {
@@ -129,14 +128,9 @@
                 "phpunit/phpunit": "3.7.*"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
             "autoload": {
-                "psr-0": {
-                    "Rych\\ByteSize": ""
+                "psr-4": {
+                    "Rych\\ByteSize\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -155,7 +149,7 @@
             "keywords": [
                 "filesize"
             ],
-            "time": "2013-05-06 21:00:01"
+            "time": "2014-04-04 18:06:18"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -216,9 +210,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "rych/bytesize": 20
-    },
+    "stability-flags": [
+
+    ],
     "platform": {
         "php": ">=5.4",
         "ext-imagick": "*",

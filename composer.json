@@ -20,7 +20,7 @@
   "davewid/peyote": "0.7.*",
   "swiftmailer/swiftmailer": "5.*",
   "gavroche/browser": "2.2.*",
-  "rych/bytesize": "1.0.*@dev",
+  "rych/bytesize": "1.0.*",
   "ext-imagick" : "*",
   "ext-gettext" : "*"
  },
