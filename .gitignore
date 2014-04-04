@@ -1,0 +1,6 @@
+vendor
+error_log
+settings.inc
+.project
+.idea
+*.DS_Store
