@@ -15,8 +15,9 @@ before_script:
  - cp tests/travis/orange_slice16.png media/
  - ls -lah media
  - ls -lah .
- - chmod 777 media/orange_slice16.png
+ - chmod 777 media
  - ls -lah media
+ - ls -lah .
  - mysql -e 'create database jvo_test;'
  - cd tools
  - php dbimport.php ../sql/tables.sql
