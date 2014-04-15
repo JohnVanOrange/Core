@@ -159,24 +159,38 @@ class Image extends Base {
   $current = $this->user->current($sid);
   if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
   $data = $this->get($image);
-  //clean up resources
-  $query = new \Peyote\Delete('resources');
-  $query->where('image', '=', $image);
-  $this->db->fetch($query);
-  //clean up media resources
-  $query = new \Peyote\Delete('media');
-  $query->where('uid', '=', $image);
-  $this->db->fetch($query);
-  //remove image in db
-  $query = new \Peyote\Delete('images');
-  $query->where('uid', '=', $image);
-  $this->db->fetch($query);
-  //remove image
-  unlink(ROOT_DIR . $data['media']['primary']['file']);
-  unlink(ROOT_DIR . $data['media']['thumb']['file']);
+  $this->cleanup_image($image, ROOT_DIR . $data['media']['primary']['file'], ROOT_DIR . $data['media']['thumb']['file']);
   return array(
    'message' => _('Image removed')
   );
+ }
+ 
+ /**
+ * Cleanup Image
+ *
+ * Removes actual image and resources and media linked to it.  This used by the remove method and for failures in the add method.
+ * 
+ * @param string $uid The 6-digit id of an image.
+ * @param string $file Full path of the image file to be removed.
+ * @param string $thumbfile Full path of the thumbnail file to be removed.
+ */
+ 
+ private function cleanup_image($uid, $file, $thumbfile) {
+    //clean up resources
+    $query = new \Peyote\Delete('resources');
+    $query->where('image', '=', $uid);
+    $this->db->fetch($query);
+    //clean up media resources
+    $query = new \Peyote\Delete('media');
+    $query->where('uid', '=', $uid);
+    $this->db->fetch($query);
+    //remove image in db
+    $query = new \Peyote\Delete('images');
+    $query->where('uid', '=', $uid);
+    $this->db->fetch($query);
+    //remove image
+    unlink($file);
+    unlink($thumbfile);
  }
 
  /**
@@ -242,7 +256,8 @@ class Image extends Base {
   $media->add($uid, '/media/' . $filename);
   //create thumbnail
   $thumb = $this->scale($uid);
-  file_put_contents(ROOT_DIR.'/media/thumbs/'.$filename,$thumb);
+  $thumbfilename = ROOT_DIR.'/media/thumbs/'.$filename;
+  file_put_contents($thumbfilename, $thumb);
   $media->add($uid, '/media/thumbs/' . $filename, 'thumb');
   //check for duplicates
   $media_results = $media->get($uid);
@@ -253,12 +268,7 @@ class Image extends Base {
         ->limit(1);
   $result = $this->db->fetch($query);
   if ($result) {
-   //remove current image
-   unlink($fullfilename);
-   //remove current media resources
-   $query = new \Peyote\Delete('media');
-   $query->where('uid', '=', $uid);
-   $this->db->fetch($query);
+   $this->cleanup_image($uid, $fullfilename, $thumbfilename);
    $dupimage = $this->get($result[0]['uid']);
    return array(
     'url' => $web_root . $dupimage['uid'],
