@@ -52,7 +52,7 @@ class Base {
  protected function setCookie($name, $value, $expire=NULL, $path='/') {
   $setting = new Setting;
   if (!headers_sent()) {
-   if ($expire = NULL) $expire = time()+60*60*24*365;
+   if ($expire == NULL) $expire = time()+60*60*24*365;
    $domain = explode('//',$setting->get('web_root'));
    $domain = '.'.rtrim($domain[1],'/');
    return setcookie($name, $value, $expire, $path, $domain);
