@@ -523,7 +523,7 @@ class Image extends Base {
   $result['height'] = $result['media']['primary']['height'];
   $siteURL = $this->siteURL();
   $result['image_url'] = $siteURL['scheme'] .'://media.' . $siteURL['host']. $result['media']['primary']['file'];
-  if (isset($result['media']['thumb']['file'])) $result['thumb_url'] = $siteURL['scheme'] .'://thumbs.' . $siteURL['host']. $result['media']['thumb']['file'];
+  if (isset($result['media']['thumb']['file'])) $result['thumb_url'] = $siteURL['scheme'] .'://' . $siteURL['host']. $result['media']['thumb']['file'];
   //this can probably stay after the BC is removed
   $result['page_url'] = $setting->get('web_root') . $result['uid'];
   //Get tags

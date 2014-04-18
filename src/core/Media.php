@@ -69,7 +69,7 @@ class Media extends Base {
   foreach ($results as $m) {
    $result[$m['type']] = $m;
    $siteURL = $this->siteURL();
-   $result[$m['type']]['url'] = $siteURL['scheme'] .'://' . $m['type'] . '.' . $siteURL['host'] . $result[$m['type']]['file'];
+   $result[$m['type']]['url'] = $siteURL['scheme'] .'://' . $siteURL['host'] . $result[$m['type']]['file'];
    $result[$m['type']]['readable_size'] = $bytesize->format($result[$m['type']]['size']);
   }
   return $result;
