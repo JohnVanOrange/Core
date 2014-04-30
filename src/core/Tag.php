@@ -78,7 +78,7 @@ class Tag extends Base {
   break;
   }
   $query = new \Peyote\Select('resources');
-  $query->columns('tag_list.name, basename, uid')
+  $query->columns('tag_list.name, tag_list.id, basename, uid')
         ->join('tag_list', 'inner')
         ->on('tag_list.id', '=', 'resources.value')
         ->join('images', 'inner')
@@ -162,6 +162,91 @@ class Tag extends Base {
         ->limit(200);
   $results = $this->db->fetch($query);
   return $results;
+ }
+ 
+ /**
+ * Remove tag
+ * 
+ * Removes a tag from an image. Must be an admin to access.
+ *
+ * @api
+ * 
+ * @param int $id Tag id.
+ * @param string $uid 6-digit image id.
+ * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+ */ 
+ 
+ public function remove($id, $uid, $sid = NULL) {
+  $user = new User;
+  $current = $user->current($sid);
+  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
+  
+  $query = new \Peyote\Delete('resources');
+  $query->where('image', '=', $uid)
+        ->where('value', '=', $id)
+        ->where('type', '=', 'tag');
+  $this->db->fetch($query);
+  
+  return [
+   'message' => _('Removed tag from image')
+  ];
+ }
+ 
+ /**
+ * Remove tag from all images
+ * 
+ * Completely removes a specific tag from all images it is on. Must be an admin to access.
+ *
+ * @api
+ * 
+ * @param int $id Tag id.
+ * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+ */
+ 
+ public function removeAll($id, $sid = NULL) {
+  $user = new User;
+  $current = $user->current($sid);
+  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401); 
+  
+  $query = new \Peyote\Delete('resources');
+  $query->where('value', '=', $id)
+        ->where('type', '=', 'tag');
+  $this->db->fetch($query);
+  
+  $query = new \Peyote\Delete('tag_list');
+  $query->where('id', '=', $id);
+  $this->db->fetch($query);
+  
+  return [
+   'message' => _('Completely removed tag')
+  ];
+ }
+ 
+ /**
+ * Rename tag
+ * 
+ * Changes the display name of a tag. The basename will not change. Must be admin to access.
+ *
+ * @api
+ * 
+ * @param int $id Tag id.
+ * @param string $name New tag name.
+ * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+ */
+ 
+ public function rename($id, $name, $sid = NULL) {
+  $user = new User;
+  $current = $user->current($sid);
+  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
+  
+  $query = new \Peyote\Update('tag_list');
+  $query->set(['name' => $name])
+        ->where('id', '=', $id);
+  $this->db->fetch($query);
+  
+  return [
+   'message' => _('Tag name updated')
+  ];
  }
  
  private function addtoList($name) {
