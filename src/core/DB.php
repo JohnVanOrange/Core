@@ -30,6 +30,7 @@ class DB extends PDO {
  private function setup() {
   $this->setup = TRUE;
   parent::__construct($this->dsn, $this->user, $this->pass, $this->dboptions);
+  //$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
   $this->setAttribute(PDO::ATTR_PERSISTENT,TRUE);
  }

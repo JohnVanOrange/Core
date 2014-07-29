@@ -10,7 +10,7 @@ class Resource extends Base {
   $this->user = new User;
  }
 
- public function add($type, $image = NULL, $sid = NULL, $value = NULL, $public = FALSE) {
+ public function add($type, $image = NULL, $sid = NULL, $value = NULL, $public = FALSE, $tag_id = NULL) {
   $current = $this->user->current($sid);
   $user_id = NULL;
   if (isset($current['id'])) $user_id = $current['id'];
@@ -19,7 +19,8 @@ class Resource extends Base {
    'image' => $image,
    'user_id' => $user_id,
    'value' => $value,
-   'type' => $type
+   'type' => $type,
+   'tag_id' => $tag_id
   ];
   if ($public) $data['public'] = 1;
   $query = new \Peyote\Insert('resources');

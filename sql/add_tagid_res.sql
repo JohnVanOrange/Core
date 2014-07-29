@@ -1,0 +1,2 @@
+ALTER TABLE `resources` ADD `tag_id` INT(8) UNSIGNED NULL DEFAULT NULL AFTER `user_id`;
+ALTER TABLE `resources` CHANGE `image` `image` VARCHAR(6) CHARACTER SET utf8 COLLATE utf8_bin NULL;
