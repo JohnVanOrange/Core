@@ -10,7 +10,7 @@ before_script:
  - pear config-set preferred_state beta
  - printf "\n" | pecl install imagick
  - composer self-update
- - composer install --prefer-source
+ - composer install --prefer-source --dev --no-interaction
  - cp tests/travis/settings.inc.travis settings.inc
  - cp tests/travis/orange_slice16.png media/
  - mysql -e 'create database jvo_test;'
