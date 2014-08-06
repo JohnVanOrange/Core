@@ -24,6 +24,9 @@
   "ext-imagick" : "*",
   "ext-gettext" : "*"
  },
+ "require-dev": {
+    "satooshi/php-coveralls": "dev-master"
+  },
  "autoload" : {
   "psr-4" : {
     "JohnVanOrange\\core\\" : "src/core/"
