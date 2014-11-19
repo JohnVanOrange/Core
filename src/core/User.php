@@ -18,6 +18,21 @@ class User extends Base {
   return md5($salt.$pass);
  }
  
+ public function unAuthUser() {
+  if (isset($_COOKIE['session'])) {
+   $session = $_COOKIE['session'];
+  } else {
+   $session = $this->setUnAuthUser();
+  }
+  return $session;
+ }
+ 
+ protected function setUnAuthUser() {
+  $session = $this->getSecureID();
+  $this->setCookie('session', $session);
+  return $session;
+ }
+ 
  public function isAdmin($sid=NULL) {
   $user = $this->current($sid);
   if (!isset($user['type'])) $user['type'] = NULL;

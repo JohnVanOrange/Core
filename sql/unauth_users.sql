@@ -1,0 +1,1 @@
+ALTER TABLE `resources` ADD `unauth_user` VARCHAR(16) NULL ;

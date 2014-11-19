@@ -13,14 +13,20 @@ class Resource extends Base {
  public function add($type, $image = NULL, $sid = NULL, $value = NULL, $public = FALSE, $tag_id = NULL) {
   $current = $this->user->current($sid);
   $user_id = NULL;
-  if (isset($current['id'])) $user_id = $current['id'];
+  $unauth_user = NULL;
+  if (isset($current['id'])) {
+   $user_id = $current['id'];
+  } else {
+   $unauth_user = $this->user->unAuthUser();
+  }
   $data = [
    'ip' => $_SERVER['REMOTE_ADDR'],
    'image' => $image,
    'user_id' => $user_id,
    'value' => $value,
    'type' => $type,
-   'tag_id' => $tag_id
+   'tag_id' => $tag_id,
+   'unauth_user' => $unauth_user
   ];
   if ($public) $data['public'] = 1;
   $query = new \Peyote\Insert('resources');

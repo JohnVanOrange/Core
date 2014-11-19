@@ -16,7 +16,7 @@ class Image extends Base {
  /**
   * Like image
   *
-  * Like an image. Must be logged in to use this method.
+  * Like an image.
   *
   * @api
   * 
@@ -26,12 +26,19 @@ class Image extends Base {
  
  public function like($image, $sid=NULL) {
   $current = $this->user->current($sid);
-  if (!$current) throw new \Exception(_('Must be logged in to rate images'),1022);
+  //if (!$current) throw new \Exception(_('Must be logged in to rate images'),1022);
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image)
         ->where('user_id', '=', $current['id'])
         ->where('type', '=', 'dislike');
   $this->db->fetch($query);
+  if (isset($_COOKIE['session'])) {
+   $query = new \Peyote\Delete('resources');
+   $query->where('image', '=', $image)
+         ->where('unauth_user', '=', $_COOKIE['session'])
+         ->where('type', '=', 'dislike');
+   $this->db->fetch($query);
+  }
   $this->res->add('like', $image, $sid);
   return array(
    'message' => _('Image liked'),
@@ -42,7 +49,7 @@ class Image extends Base {
  /**
   * Dislike image
   *
-  * Dislike an image. Must be logged in to use this method.
+  * Dislike an image.
   *
   * @api
   * 
@@ -52,12 +59,19 @@ class Image extends Base {
  
  public function dislike($image, $sid=NULL) {
   $current = $this->user->current($sid);
-  if (!$current) throw new \Exception(_('Must be logged in to rate images'),1023);
+  //if (!$current) throw new \Exception(_('Must be logged in to rate images'),1023);
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image)
         ->where('user_id', '=', $current['id'])
         ->where('type', '=', 'like');
   $this->db->fetch($query);
+  if (isset($_COOKIE['session'])) {
+   $query = new \Peyote\Delete('resources');
+   $query->where('image', '=', $image)
+         ->where('unauth_user', '=', $_COOKIE['session'])
+         ->where('type', '=', 'like');
+   $this->db->fetch($query);
+  }
   $this->res->add('dislike', $image, $sid);
   return array(
    'message' => _('Image disliked'),
@@ -78,10 +92,10 @@ class Image extends Base {
  
  public function save($image, $sid=NULL) {
   $current = $this->user->current($sid);
-  if (!$current) throw new \Exception(_('Must be logged in to save images'),1020);
+  if (!$current) throw new \Exception(_('Must be logged in to favorite images'),1020);
   $this->res->add('save', $image, $sid);
   return array(
-   'message' => _('Image saved'),
+   'message' => _('Image favorited'),
    'saved' => 1
   );
  }
@@ -542,10 +556,21 @@ class Image extends Base {
    $result['added'] = $upload[0]['created'];
   }
   //Get resources
-  if ($current) {
+  if ($current) { //this could probably be simplified so only the initial query is in the if block
    $query = new \Peyote\Select('resources');
    $query->where('image' ,'=', $result['uid'])
          ->where('user_id', '=', $current['id']);
+   $resources = $this->db->fetch($query);
+   $data = NULL;
+   foreach ($resources as $r) {
+    $data[$r['type']] = $r;
+   }
+   if ($data) $result['data'] = $data;
+   if (isset($data['save'])) $result['saved'] = 1;
+  } elseif (isset($_COOKIE['session'])) {
+   $query = new \Peyote\Select('resources');
+   $query->where('image' ,'=', $result['uid'])
+         ->where('unauth_user', '=', $_COOKIE['session']);
    $resources = $this->db->fetch($query);
    $data = NULL;
    foreach ($resources as $r) {
