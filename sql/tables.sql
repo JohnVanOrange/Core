@@ -87,14 +87,16 @@ CREATE TABLE IF NOT EXISTS `ads` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0 ;
 
 CREATE TABLE IF NOT EXISTS `media` (
-  `uid` varchar(6) character set utf8 collate utf8_bin NOT NULL,
-  `file` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `format` varchar(4) collate utf8_unicode_ci NOT NULL,
-  `hash` varchar(32) collate utf8_unicode_ci NOT NULL,
+  `uid` varchar(6) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `file` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `format` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
+  `hash` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `width` smallint(5) unsigned NOT NULL,
   `height` smallint(5) unsigned NOT NULL,
   `size` int(10) unsigned NOT NULL,
-  `type` enum('thumb','primary') collate utf8_unicode_ci NOT NULL default 'primary'
+  `type` enum('thumb','primary') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'primary',
+  `storage` int(3) NOT NULL DEFAULT '1',
+  KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `settings` (
@@ -119,3 +121,18 @@ INSERT INTO `settings` (`name`, `value`) VALUES
 ('amazon_aff', NULL),
 ('403_image', '403.jpg'),
 ('404_image', '404.jpg');
+
+CREATE TABLE IF NOT EXISTS `storage` (
+  `id` int(3) NOT NULL AUTO_INCREMENT,
+  `type` varchar(8) COLLATE utf8_unicode_ci NOT NULL,
+  `path` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `endpoint` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `access_key` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `secret_key` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `bucket` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+
+INSERT INTO `storage` (`id`, `type`, `path`) VALUES
+(1, 'local', 'media.example.com',);

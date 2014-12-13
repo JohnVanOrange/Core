@@ -62,14 +62,35 @@ class Media extends Base {
  
  public function get($uid) {
   $query = new \Peyote\Select('media');
-  $query->where('uid', '=', $uid);
+  $query->columns('media.uid',
+                  'media.file',
+                  'media.format',
+                  'media.hash',
+                  'media.width',
+                  'media.height',
+                  'media.size',
+                  'media.type',
+                  'storage.type AS storage_type',
+                  'storage.path',
+                  'storage.endpoint',
+                  'storage.bucket')
+        ->join('storage', 'inner')
+        ->on('storage.id', '=', 'media.storage')
+        ->where('media.uid', '=', $uid);
   $results = $this->db->fetch($query);
   $formatter = new \Rych\ByteSize\Formatter\Binary;
   $bytesize = new \Rych\ByteSize\ByteSize($formatter);
   foreach ($results as $m) {
    $result[$m['type']] = $m;
    $siteURL = $this->siteURL();
-   $result[$m['type']]['url'] = $siteURL['scheme'] .'://' . $siteURL['host'] . $result[$m['type']]['file'];
+   switch ($m['storage_type']) {
+    case 'local':
+     $result[$m['type']]['url'] = $siteURL['scheme'] .'://' . $m['path'] . $result[$m['type']]['file'];
+     break;
+    case 's3':
+     $result[$m['type']]['url'] = $siteURL['scheme'] .'://' . $m['bucket'] . '.' . $m['endpoint'] . '/' . $result[$m['type']]['file'];
+     break;
+   }
    $result[$m['type']]['readable_size'] = $bytesize->format($result[$m['type']]['size']);
   }
   return $result;

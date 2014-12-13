@@ -21,6 +21,7 @@
   "swiftmailer/swiftmailer": "5.*",
   "gavroche/browser": "2.2.*",
   "rych/bytesize": "1.0.*",
+  "tpyo/amazon-s3-php-class": "dev-master",
   "ext-imagick" : "*",
   "ext-gettext" : "*"
  },
