@@ -135,4 +135,4 @@ CREATE TABLE IF NOT EXISTS `storage` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 INSERT INTO `storage` (`id`, `type`, `path`) VALUES
-(1, 'local', 'media.example.com',);
+(1, 'local', 'media.example.com');
