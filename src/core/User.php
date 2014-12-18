@@ -352,7 +352,7 @@ class User extends Base {
           ->where('value', '=', $auth)
           ->limit(1);
     $user_id = $this->db->fetch($query)[0]['user_id'];
-    if (!$user_id) throw new \Exception(_('Password reset key not found'));
+    if (!$user_id) throw new \Exception(_('Password reset key not found (link may have already been used)'));
     $query = new \Peyote\Delete('resources');
     $query->where('value', '=', $auth)
           ->limit(1);
