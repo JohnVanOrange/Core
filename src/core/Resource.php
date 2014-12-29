@@ -19,8 +19,11 @@ class Resource extends Base {
   } else {
    $unauth_user = $this->user->unAuthUser();
   }
+  
+  $ip = '';
+  if (isset($_SERVER['REMOTE_ADDR'])) $ip = $_SERVER['REMOTE_ADDR'];
   $data = [
-   'ip' => $_SERVER['REMOTE_ADDR'],
+   'ip' => $ip,
    'image' => $image,
    'user_id' => $user_id,
    'value' => $value,
