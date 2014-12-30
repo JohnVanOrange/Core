@@ -25,8 +25,8 @@ class Image extends Base {
   */
  
  public function like($image, $sid=NULL) {
+  if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
-  //if (!$current) throw new \Exception(_('Must be logged in to rate images'),1022);
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image)
         ->where('user_id', '=', $current['id'])
@@ -58,8 +58,8 @@ class Image extends Base {
   */
  
  public function dislike($image, $sid=NULL) {
+  if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
-  //if (!$current) throw new \Exception(_('Must be logged in to rate images'),1023);
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image)
         ->where('user_id', '=', $current['id'])
@@ -91,6 +91,7 @@ class Image extends Base {
   */
  
  public function save($image, $sid=NULL) {
+  if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
   if (!$current) throw new \Exception(_('Must be logged in to favorite images'),1020);
   $this->res->add('save', $image, $sid);
