@@ -42,7 +42,8 @@ class Image extends Base {
   $this->res->add('like', $image, $sid);
   return array(
    'message' => _('Image liked'),
-   'liked' => 1
+   'liked' => 1,
+   'uid' => $image
   );
  }
 
@@ -75,7 +76,8 @@ class Image extends Base {
   $this->res->add('dislike', $image, $sid);
   return array(
    'message' => _('Image disliked'),
-   'liked' => 0
+   'liked' => 0,
+   'uid' => $image
   );
  } 
  
@@ -97,7 +99,8 @@ class Image extends Base {
   $this->res->add('save', $image, $sid);
   return array(
    'message' => _('Image favorited'),
-   'saved' => 1
+   'saved' => 1,
+   'uid' => $image
   );
  }
 
@@ -113,6 +116,7 @@ class Image extends Base {
   */
  
  public function unsave($image, $sid=NULL) {
+  if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
   if (!$current) throw new \Exception(_('Must be logged in to unsave images'),1021);
   $query = new \Peyote\Delete('resources');
@@ -122,7 +126,8 @@ class Image extends Base {
   $this->db->fetch($query);
   return array(
    'message' => _('Image unsaved'),
-   'saved' => 0
+   'saved' => 0,
+   'uid' => $image
   );
  }
  
@@ -155,7 +160,8 @@ class Image extends Base {
         ->where('uid', '=', $image);
   $this->db->fetch($query);
   return array(
-   'message' => _('Image approved')
+   'message' => _('Image approved'),
+   'uid' => $image
   );
  }
  
@@ -176,7 +182,8 @@ class Image extends Base {
   $data = $this->get($image);
   $this->cleanup_image($image, ROOT_DIR . $data['media']['primary']['file'], ROOT_DIR . $data['media']['thumb']['file']);
   return array(
-   'message' => _('Image removed')
+   'message' => _('Image removed'),
+   'uid' => $image
   );
  }
  
@@ -359,7 +366,8 @@ class Image extends Base {
   $message = new Mail();
   $message->sendAdminMessage('New Reported Image for '. $site_name, $body);
   return array(
-   'message' => _('Image Reported')
+   'message' => _('Image Reported'),
+   'uid' => $image
   );
  }
  
@@ -688,7 +696,7 @@ class Image extends Base {
   $this->remove($sec['uid']);
   return [
    'message' => _('Images merged'),
-   'image' => $primary['uid'],
+   'uid' => $primary['uid'],
    'url' => $primary['page_url'],
    'thumb' => $primary['thumb_url']
   ];
