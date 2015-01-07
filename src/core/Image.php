@@ -426,15 +426,21 @@ class Image extends Base {
   * @api
   *
   * @param array $filter Array of options to filter image results.  Currently available options include format, animated, nsfw, approved and uploader.
+  * @param int $count Number of results to return.
   */
  
- public function random($filter = NULL) {
+ public function random($filter = NULL, $count = 1) {
   if (!is_object($filter)) $filter = json_decode($filter, TRUE);
-  $query = new ImageFilter\Random($filter);
-  $result = $this->db->fetch($query);
-  if (!$result) throw new \Exception(_('No image results'));
-  $image = $this->get($result[0]['uid']);
-  $image['response'] = $image['uid']; //backwards compatibility
+  $query = new ImageFilter\Random($filter, $count);
+  $results = $this->db->fetch($query);
+  if (!$results) throw new \Exception(_('No image results'));
+  foreach ($results as $result) {
+   $image[] = $this->get($result['uid']);
+  }
+  if ($count == 1) {
+   $image = $image[0];
+   $image['response'] = $image['uid']; //backwards compatibility
+  }
   return $image;
  }
  

@@ -2,8 +2,11 @@
 namespace JohnVanOrange\core\ImageFilter;
 
 class Random extends Base {
+ 
+ protected $count;
 
- public function __construct($options = NULL) {
+ public function __construct($options = NULL, $count = 1) {
+  $this->count = $count;
   parent::__construct($options);
  }
  
@@ -12,7 +15,7 @@ class Random extends Base {
  }
  
  protected function limit_process() {
-  $this->limit(1);
+  $this->limit($this->count);
  }
 
 }
