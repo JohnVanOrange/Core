@@ -75,7 +75,18 @@ class User extends Base {
   if (isset($user[0])) $user = $user[0];
   if (isset($user['email'])) $user['email_hash'] = md5($user['email']);
   unset($user['email']);
+  $user['favs'] = $this->user_stat($user['id'], 'save');
+  $user['likes'] = $this->user_stat($user['id'], 'like');
+  $user['uploads'] = $this->user_stat($user['id'], 'upload');
   return $user;
+ }
+ 
+ private function user_stat($user_id, $stat) {
+  $query = new \Peyote\Select('resources');
+  $query->columns('COUNT(*)')
+        ->where('type', '=', $stat)
+        ->where('user_id', '=', $user_id);
+  return $this->db->fetch($query)[0]['COUNT(*)'];
  }
  
  /**
