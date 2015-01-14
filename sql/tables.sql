@@ -75,7 +75,9 @@ CREATE TABLE IF NOT EXISTS `resources` (
   `value` int(8) default NULL,
   `type` varchar(8) collate utf8_unicode_ci NOT NULL,
   `public` tinyint(1) NOT NULL default '0',
-  KEY `image` (`image`)
+  KEY `image` (`image`),
+  KEY `user_id` (`user_id`),
+  KEY `value_type` (`value`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `ads` (
@@ -97,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   `type` enum('thumb','primary') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'primary',
   `storage` int(3) NOT NULL DEFAULT '1',
   KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `settings` (
   `name` varchar(16) collate utf8_unicode_ci NOT NULL,
