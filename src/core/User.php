@@ -249,7 +249,7 @@ class User extends Base {
   $return = [];
   foreach ($results as $result) {
    try {
-    $return[] = $image->get($result['image']);
+    $return[] = $image->get_slim($result['image']);
    }
    catch(\Exception $e) {
     if ($e->getCode() != 403) {
@@ -287,7 +287,7 @@ class User extends Base {
   $return = [];
   foreach ($results as $result) {
    try {
-    $return[] = $image->get($result['image']);
+    $return[] = $image->get_slim($result['image']);
    }
    catch(\Exception $e) {
     if ($e->getCode() != 403) {

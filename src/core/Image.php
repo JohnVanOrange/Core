@@ -463,7 +463,7 @@ class Image extends Base {
   $image = new Image();
   foreach ($results as $result) {
    try {
-    $return[] = $image->get($result['image']);
+    $return[] = $image->get_slim($result['image']);
    }
    catch(\Exception $e) {
     if ($e->getCode() != 403) {
@@ -495,7 +495,7 @@ class Image extends Base {
   $image = new Image();
   foreach ($results as $result) {
    try {
-    $return[] = $image->get($result['image']);
+    $return[] = $image->get_slim($result['image']);
    }
    catch(\Exception $e) {
     if ($e->getCode() != 403) {
@@ -504,6 +504,26 @@ class Image extends Base {
    }
   }
   return $return;
+ }
+ 
+ /**
+  * Get image with minimal data
+  *
+  * Retrieve information about an image. Only provides basic image and media data. Designed for other methods that require minimal data about an image.
+  * 
+  * @param string $image The 6-digit id of an image.
+  */
+ public function get_slim($image) {
+  $query = new \Peyote\Select('images');
+  $query->where('uid', '=', $image)
+        ->limit(1);
+  $result = $this->db->fetch($query);
+  if (!$result) throw new \Exception(_('Image not found'), 404);
+  $result = $result[0];
+  $media = new Media;
+  $result['media'] = $media->get($image);
+  if (!$result['display']) throw new \Exception(_('Image removed'), 403); //need to be modified to allow admins if intergrated into image/get
+  return $result;
  }
  
  /**
