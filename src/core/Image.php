@@ -523,6 +523,8 @@ class Image extends Base {
   $media = new Media;
   $result['media'] = $media->get($image);
   if (!$result['display']) throw new \Exception(_('Image removed'), 403); //need to be modified to allow admins if intergrated into image/get
+  $setting = new Setting;
+  $result['page_url'] = $setting->get('web_root') . $result['uid'];
   return $result;
  }
  
