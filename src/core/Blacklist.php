@@ -3,11 +3,8 @@ namespace JohnVanOrange\core;
 
 class Blacklist extends Base {
  
- private $res;
- 
  public function __construct() {
   parent::__construct();
-  $this->res = new Resource;
  }
  
  /**
@@ -28,8 +25,9 @@ class Blacklist extends Base {
   $tag = htmlspecialchars(trim(stripslashes($name)));
   $slug = $this->text2slug($tag);
   if ($slug == '') throw new \Exception(_('Invalid tag name'), 1030);
-
-  $this->res->add('bl', NULL, $sid, $slug);
+  
+  $res = new Resource;
+  $res->add('bl', NULL, $sid, $slug);
   
   return [
    'message' => _('Tag added to blacklist'),
