@@ -28,6 +28,8 @@ class Tag extends Base {
   $tag = htmlspecialchars(trim(stripslashes($name)));
   $slug = $this->text2slug($tag);
   if ($slug == '') throw new \Exception(_('Invalid tag name'), 1030);
+  $blacklist = new Blacklist;
+  if ($blacklist->check($slug)) throw new \Exception(_('Tag has been banned'), 1031);
   $query = new \Peyote\Select('tag_list');
   $query->columns('id')
         ->where('basename', '=', $slug);
