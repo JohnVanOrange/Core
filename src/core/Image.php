@@ -643,7 +643,17 @@ class Image extends Base {
   if ($brazzify) {
    $result['brazzify_url'] = json_decode($this->remoteFetch('http://i.brazzify.me/api.php?logo=brazzers&remote_url='.$result['media']['primary']['url']),1)['url'];
   }
+  $result['favs'] = $this->image_stat($result['uid'], 'save');
+  $result['likes'] = $this->image_stat($result['uid'], 'like');
   return $result;
+ }
+ 
+ private function image_stat($image, $stat) {
+  $query = new \Peyote\Select('resources');
+  $query->columns('COUNT(*)')
+        ->where('type', '=', $stat)
+        ->where('image', '=', $image);
+  return $this->db->fetch($query)[0]['COUNT(*)'];
  }
 
  private function getUID($length = 6) {
