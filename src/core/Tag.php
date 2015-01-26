@@ -286,14 +286,12 @@ class Tag extends Base {
   //Add report
   $this->res->add('treport', NULL, $sid, $type, FALSE, $tag_id);
   //TODO: need a way to retrieve tag data by tag_id
-  $body = 'A new tag was reported on '. $site_name . ".\n\n";
-  //TODO: this should link to some tag report interface where it can be removed.
-  //$body .= "View Reported Tag:\n";
-  //$body .= $setting->get('web_root') . 'admin/tag/' . $tag_basename . "\n\n";
-  $body .= "IP:\n";
-  $body .= $_SERVER['REMOTE_ADDR'];
   $message = new Mail();
-  $message->sendAdminMessage('New Reported Tag for '. $site_name, $body);
+  $data = [
+   'site_name'   => $site_name,
+   'remote_addr' => $_SERVER['REMOTE_ADDR']
+  ];
+  $message->sendAdminMessage('New Reported Tag for '. $site_name, 'reported_tag', $data);
   return array(
    'message' => _('Tag Reported')
   );

@@ -325,18 +325,19 @@ class User extends Base {
   $query->columns(array_keys($data))
         ->values(array_values($data));
   $this->db->fetch($query);
-  $body = 'There was a password reset request sent from '. $site_name . ".\n\n";
-  $body .= "Username:\n";
-  $body .= $user['username']."\n\n";
-  $body .= "Follow link to provide new password:\n";
-  $body .= $setting->get('web_root') . 'changepw?resetkey=' . $uid . "\n\n";
   //need to get email address from db as $user->get doesn't return it for security reasons
   $query = new \Peyote\Select('users');
   $query->columns('email')
         ->where('username', '=', $username);
   $email = $this->db->fetch($query);
   $message = new Mail();
-  $message->sendMessage([$email[0]['email']], 'Password reset request for '. $site_name, $body);
+  $data = [
+   'site_name' => $site_name,
+   'username'  => $user['username'],
+   'web_root'  => $setting->get('web_root'),
+   'reset_key' => $uid
+  ];
+  $message->sendMessage([$email[0]['email']], 'Password reset request for '. $site_name, 'pwreset', $data);
   return array(
    'message' => _('Reset email sent')
   );

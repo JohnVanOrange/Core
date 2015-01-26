@@ -14,11 +14,14 @@ class Mail extends \Swift_Message {
  public function __destruct() {
  }
  
- public function sendMessage($to, $subject, $body) {
+ public function sendMessage($to, $subject, $template, $data) {
   $setting = new Setting;
   $toEmail = $to[0];
   $toName = NULL;
   if (isset($to[1])) $toName = $to[1];
+  
+  $body = $this->loadTemplate($template, $data);
+  
   $this->message->setFrom(SITE_EMAIL, $setting->get('site_name'))
                 ->setTo($toEmail, $toName)
                 ->setSubject($subject)
@@ -26,14 +29,10 @@ class Mail extends \Swift_Message {
   return $this->send();
  }
  
- public function sendAdminMessage($subject, $body) {
+ public function sendAdminMessage($subject, $template, $data) {
   $setting = new Setting;
   $site_name = $setting->get('site_name');
-  $this->message->setFrom(SITE_EMAIL, $site_name)
-                ->setTo(ADMIN_EMAIL, $site_name . ' Admin')
-                ->setSubject($subject)
-                ->setBody($body);
-  return $this->send();
+  return $this->sendMessage([ADMIN_EMAIL, $site_name . ' Admin'], $subject, $template, $data);
  }
  
  public function setTo($to, $name = NULL) {
@@ -54,6 +53,13 @@ class Mail extends \Swift_Message {
  
  public function send() {
   return $this->mailer->send($this->message);
+ }
+ 
+ private function loadTemplate($template, $data) {
+  $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../mail_templates/text/');
+  $twig = new \Twig_Environment($loader);
+  $template = $twig->loadTemplate($template . '.twig');
+  return $template->render($data);
  }
  
 }
