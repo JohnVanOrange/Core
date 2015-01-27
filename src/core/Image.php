@@ -347,8 +347,6 @@ class Image extends Base {
   */
  
  public function report($image, $type, $sid = NULL) {
-  $setting = new Setting;
-  $site_name = $setting->get('web_root');
   if (!isset($image)) throw new \Exception(_('No image specified'));
   if (!isset($type)) throw new \Exception(_('No report type specified'));
   //Add report
@@ -358,6 +356,8 @@ class Image extends Base {
   $query->set(['display' => 0])
         ->where('uid', '=', $image);
   $this->db->fetch($query);
+  $setting = new Setting;
+  $site_name = $setting->get('site_name');
   $message = new Mail();
   $data = [
    'site_name'   => $site_name,

@@ -1,0 +1,8 @@
+<p>There was a password reset request sent from {{ site_name }} for user {{ username }}.</p>
+
+<p><a href="{{ web_root }}changepw?resetkey={{ reset_key }}">Click here to change password</a></p>
+
+<p>If link does not work, copy and paste this into your browser:<br>
+{{ web_root }}changepw?resetkey={{ reset_key }}</p>
+
+<p>If you did not request this password to be reset, you may feel free to ignore this email.</p>

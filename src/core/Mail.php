@@ -20,12 +20,16 @@ class Mail extends \Swift_Message {
   $toName = NULL;
   if (isset($to[1])) $toName = $to[1];
   
-  $body = $this->loadTemplate($template, $data);
+  $text_body = $this->loadTemplate($template, $data);
+  $html_body = $this->loadTemplate($template, $data, 'html');
   
   $this->message->setFrom(SITE_EMAIL, $setting->get('site_name'))
                 ->setTo($toEmail, $toName)
                 ->setSubject($subject)
-                ->setBody($body);
+                ->setBody($text_body);
+  
+  if (isset($html_body)) $this->message->addPart($html_body, 'text/html');
+  
   return $this->send();
  }
  
@@ -55,10 +59,15 @@ class Mail extends \Swift_Message {
   return $this->mailer->send($this->message);
  }
  
- private function loadTemplate($template, $data) {
-  $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../mail_templates/text/');
+ private function loadTemplate($template, $data, $type = 'text') {
+  $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../mail_templates/'.$type);
   $twig = new \Twig_Environment($loader);
-  $template = $twig->loadTemplate($template . '.twig');
+  try {
+   $template = $twig->loadTemplate($template . '.twig');
+  }
+  catch(\Exception $e) { //when failing to load template, better to have a blank message
+   return null; 
+  }
   return $template->render($data);
  }
  
