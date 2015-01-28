@@ -332,9 +332,7 @@ class User extends Base {
   $email = $this->db->fetch($query);
   $message = new Mail();
   $data = [
-   'site_name' => $site_name,
    'username'  => $user['username'],
-   'web_root'  => $setting->get('web_root'),
    'reset_key' => $uid
   ];
   $message->sendMessage([$email[0]['email']], 'Password reset request for '. $site_name, 'pwreset', $data);

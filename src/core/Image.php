@@ -357,15 +357,11 @@ class Image extends Base {
         ->where('uid', '=', $image);
   $this->db->fetch($query);
   $setting = new Setting;
-  $site_name = $setting->get('site_name');
   $message = new Mail();
   $data = [
-   'site_name'   => $site_name,
-   'web_root'    => $setting->get('web_root'),
-   'image'       => $image,
-   'remote_addr' => $_SERVER['REMOTE_ADDR']
+   'image' => $image
   ];
-  $message->sendAdminMessage('New Reported Image for '. $site_name, 'reported_image', $data);
+  $message->sendAdminMessage('New Reported Image for '. $setting->get('site_name'), 'reported_image', $data);
   return array(
    'message' => _('Image Reported'),
    'uid' => $image

@@ -287,10 +287,7 @@ class Tag extends Base {
   $this->res->add('treport', NULL, $sid, $type, FALSE, $tag_id);
   //TODO: need a way to retrieve tag data by tag_id
   $message = new Mail();
-  $data = [
-   'site_name'   => $site_name,
-   'remote_addr' => $_SERVER['REMOTE_ADDR']
-  ];
+  $data = [];
   $message->sendAdminMessage('New Reported Tag for '. $site_name, 'reported_tag', $data);
   return array(
    'message' => _('Tag Reported')

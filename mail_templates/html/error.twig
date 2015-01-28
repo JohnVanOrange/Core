@@ -1,0 +1,15 @@
+{% extends "base.twig" %}
+
+{% block content %}
+ <tr>An error occurred for site {{ theme.site_name }}.</tr>
+
+ <tr>Page: <code>{{ page }}</code></tr>
+ 
+ <tr>Code: <code>{{ code }}</code></tr>
+ 
+ <tr>Message: </tr>
+ 
+ <tr><code>{{ message }}</code></tr>
+
+ <tr>IP: <code>{{ theme.remote_addr }}</code></tr>
+{% endblock %}

@@ -68,6 +68,11 @@ class Mail extends \Swift_Message {
   catch(\Exception $e) { //when failing to load template, better to have a blank message
    return null; 
   }
+  
+  $setting = new Setting;
+  $themeclass = 'JohnVanOrange\core\MailTheme\\' . ucfirst($setting->get('theme'));
+  $data['theme'] = $themeclass::get();
+  
   return $template->render($data);
  }
  

@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+ <head>
+  <style>
+   {% block style %}{% endblock %}
+  </style>
+ </head>
+ <body style="
+   color: {{ theme.text_color }};
+   background-color: {{ theme.background_color }};
+ ">
+  <table width="100%" style="border-spacing: 20px" style="color: {{ theme.text_color }}">
+   <tr><img src='{{ theme.web_root }}/img/{{ theme.name }}_header.png' /></tr>
+   {% block content %}{% endblock %}
+  </table>
+ </body>
+</html>

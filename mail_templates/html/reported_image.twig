@@ -1,5 +1,22 @@
-<p>A new image was reported on {{ site_name }}.</p>
+{% extends "base.twig" %}
 
-<p><a href="{{ web_root }}admin/image/{{ image }}">View Reported Image</a></p>
+{% block content %}
+ <tr>A new image was reported on {{ theme.site_name }}.</tr>
 
-<p>IP: <code>{{ remote_addr }}</code></p>
+ <tr height="35px"><td>
+  <a href="{{ theme.web_root }}admin/image/{{ image }}" style="
+   padding: 10px 16px;
+   font-size: 18px;
+   line-height: 1.33;
+   border-radius: 6px;
+   background-color: {{ theme.button_color }};
+   border-color: {{ theme.button_border }};
+   color: {{ theme.button_text }};
+   text-decoration: none;
+  ">
+   View Reported Image
+  </a>
+ </td></tr>
+
+ <tr>IP: <code>{{ theme.remote_addr }}</code></tr>
+{% endblock %}
