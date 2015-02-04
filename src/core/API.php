@@ -29,7 +29,8 @@ class API {
      'media' => 'JohnVanOrange\core\Media',
      'ads' => 'JohnVanOrange\core\Ads',
      'setting' => 'JohnVanOrange\core\Setting',
-     'blacklist' => 'JohnVanOrange\core\Blacklist'
+     'blacklist' => 'JohnVanOrange\core\Blacklist',
+     'message' => 'JohnVanOrange\core\Message'
      ];
     switch ($class) {
      case 'image':
@@ -41,6 +42,7 @@ class API {
      case 'ads':
      case 'setting':
      case 'blacklist':
+     case 'message':
       $class_name =  $valid_classes[$class];
       break;
      default:

@@ -15,7 +15,6 @@ class Mail extends \Swift_Message {
  }
  
  public function sendMessage($to, $subject, $template, $data) {
-  $setting = new Setting;
   $toEmail = $to[0];
   $toName = NULL;
   if (isset($to[1])) $toName = $to[1];
@@ -23,20 +22,21 @@ class Mail extends \Swift_Message {
   $text_body = $this->loadTemplate($template, $data);
   $html_body = $this->loadTemplate($template, $data, 'html');
   
+  $setting = new Setting;
   $this->message->setFrom(SITE_EMAIL, $setting->get('site_name'))
                 ->setTo($toEmail, $toName)
                 ->setSubject($subject)
                 ->setBody($text_body);
   
   if (isset($html_body)) $this->message->addPart($html_body, 'text/html');
+  if (isset($data['reply-email'])) $this->message->setReplyTo($data['reply-email']);
   
   return $this->send();
  }
  
  public function sendAdminMessage($subject, $template, $data) {
   $setting = new Setting;
-  $site_name = $setting->get('site_name');
-  return $this->sendMessage([ADMIN_EMAIL, $site_name . ' Admin'], $subject, $template, $data);
+  return $this->sendMessage([ADMIN_EMAIL, $setting->get('site_name') . ' Admin'], $subject, $template, $data);
  }
  
  public function setTo($to, $name = NULL) {
