@@ -10,7 +10,7 @@ class Message extends Base {
  /**
   * Admin message
   *
-  * Send's a message to site admins.
+  * Send a message to site admins.
   *
   * @api
   * 
