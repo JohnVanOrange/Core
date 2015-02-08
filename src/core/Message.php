@@ -24,7 +24,7 @@ class Message extends Base {
   $data = [
    'message'     => $message,
    'name'        => $name,
-   'reply-email' => $email
+   'reply_email' => $email
   ];
   $mail->sendAdminMessage('Message to Admin', 'admin_message', $data);
   if ($email != 'not-provided@example.com') {

@@ -29,7 +29,7 @@ class Mail extends \Swift_Message {
                 ->setBody($text_body);
   
   if (isset($html_body)) $this->message->addPart($html_body, 'text/html');
-  if (isset($data['reply-email'])) $this->message->setReplyTo($data['reply-email']);
+  if (isset($data['reply_email'])) $this->message->setReplyTo($data['reply_email']);
   
   return $this->send();
  }
