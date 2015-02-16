@@ -12,18 +12,18 @@ class Image extends Base {
   $this->user = new User;
   $this->res = new Resource;
  }
- 
+
  /**
   * Like image
   *
   * Like an image.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function like($image, $sid=NULL) {
   if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
@@ -53,11 +53,11 @@ class Image extends Base {
   * Dislike an image.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function dislike($image, $sid=NULL) {
   if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
@@ -79,19 +79,19 @@ class Image extends Base {
    'liked' => 0,
    'uid' => $image
   );
- } 
- 
+ }
+
  /**
   * Save image
   *
   * Save an image for viewing later. Must be logged in to use this method.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function save($image, $sid=NULL) {
   if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
@@ -110,11 +110,11 @@ class Image extends Base {
   * Stop saving a previously saved image. Must be logged in to use this method.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function unsave($image, $sid=NULL) {
   if (!$image) throw new \Exception(_('Must provide image ID'), 1040);
   $current = $this->user->current($sid);
@@ -130,19 +130,19 @@ class Image extends Base {
    'uid' => $image
   );
  }
- 
+
  /**
   * Approve image
   *
   * Approves an image. If the image was reported, it will resolve all reports. If the image was hidden, it will now be displayed. Must be logged on as admin to access this method.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   * @param bool $nsfw If an image should be marked as approved, but NSFW, setting this to 'true' or '1' will mark the image that way.
   */
- 
+
  public function approve($image, $sid=NULL, $nsfw=NULL) {
   $current = $this->user->current($sid);
   if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
@@ -164,39 +164,67 @@ class Image extends Base {
    'uid' => $image
   );
  }
- 
+
  /**
   * Remove image
   *
   * Removes an image and everything associated with it. Must be logged on as admin to access this method.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function remove($image, $sid=NULL) {
   $current = $this->user->current($sid);
   if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
   $data = $this->get($image);
-  $this->cleanup_image($image, ROOT_DIR . $data['media']['primary']['file'], ROOT_DIR . $data['media']['thumb']['file']);
+  //clean up resources
+  $query = new \Peyote\Delete('resources');
+  $query->where('image', '=', $image);
+  $this->db->fetch($query);
+  //clean up media resources
+  $query = new \Peyote\Delete('media');
+  $query->where('uid', '=', $image);
+  $this->db->fetch($query);
+  //remove image in db
+  $query = new \Peyote\Delete('images');
+  $query->where('uid', '=', $image);
+  $this->db->fetch($query);
+  //remove images
+  $types = [
+    'primary',
+    'thumb'
+  ];
+  foreach ($types as $type) {
+    $i = $data['media'][$type];
+    switch ($i['storage_type']) {
+      case 'local':
+        unlink(ROOT_DIR . $i['file']);
+        break;
+      case 's3':
+        $s3 = new S3;
+        $s3->deleteObject($s3->get_bucket(), $i['file']);
+        break;
+    }
+  }
   return array(
    'message' => _('Image removed'),
    'uid' => $image
   );
  }
- 
+
  /**
  * Cleanup Image
  *
  * Removes actual image and resources and media linked to it.  This used by the remove method and for failures in the add method.
- * 
+ *
  * @param string $uid The 6-digit id of an image.
  * @param string $file Full path of the image file to be removed.
  * @param string $thumbfile Full path of the thumbnail file to be removed.
  */
- 
+
  private function cleanup_image($uid, $file, $thumbfile) {
     //clean up resources
     $query = new \Peyote\Delete('resources');
@@ -221,12 +249,12 @@ class Image extends Base {
   * Allows uploading images.
   *
   * @api
-  * 
+  *
   * @param mixed $image An image uploaded as multi-part form data. Must be JPEG, PNG, or GIF format.
   * @param string $c_link An optional external link to comments for the image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie.
   */
- 
+
  public function add($image, $c_link = NULL, $sid= NULL) {
   if (!$this->allow_upload()) throw new \Exception('Adding images is currently disabled due to site maintanence');
   $filename = md5(mt_rand());
@@ -234,17 +262,17 @@ class Image extends Base {
   if (isset($image['tmp_name'])) move_uploaded_file($image['tmp_name'], $path);
   return $this->processAdd($path, $c_link, $sid);
  }
- 
+
  /**
   * Process added image
   *
   * Once add() or addFromURL() have stored the image, this method completes adding it to the system
-  * 
+  *
   * @param string $path Location the image is stored. Must be JPEG, PNG, or GIF format.
   * @param string $c_link An optional external link to comments for the image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie.
   */
- 
+
  private function processAdd($path, $c_link=NULL, $sid = NULL) {
   $setting = new Setting;
   $web_root = $setting->get('web_root');
@@ -319,12 +347,12 @@ class Image extends Base {
   * Allows adding images to site from remote URL's.
   *
   * @api
-  * 
+  *
   * @param string $url Full URL to an image to be added to the site. Must be JPEG, PNG, or GIF format.
   * @param string $c_link An optional external link to comments for the image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie.
   */
- 
+
  public function addFromURL($url, $c_link=NULL, $sid = NULL) {
   if (!$this->allow_upload()) throw new \Exception('Adding images is currently disabled due to site maintanence');
   $image = $this->remoteFetch($url);
@@ -340,12 +368,12 @@ class Image extends Base {
   * Allows reporting of problematic images so they may undergo review.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param int $type Number value representing the reason type which can be found in report/all
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie.
   */
- 
+
  public function report($image, $type, $sid = NULL) {
   if (!isset($image)) throw new \Exception(_('No image specified'));
   if (!isset($type)) throw new \Exception(_('No report type specified'));
@@ -367,20 +395,20 @@ class Image extends Base {
    'uid' => $image
   );
  }
- 
+
  /**
   * Random reported image
   *
   * Retrieves a random image that has been reported by users. Must be logged in as an admin to access this method.
   *
   * @api
-  * 
+  *
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function reported($sid=NULL) {
   $current = $this->user->current($sid);
-  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401); 
+  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
   $query = new \Peyote\Select('resources');
   $query->where('type', '=', 'report')
         ->orderBy('RAND()')
@@ -390,20 +418,20 @@ class Image extends Base {
   if (!$image_result) throw new \Exception(_('No image result'), 404);
   return $image_result;
  }
- 
+
  /**
   * Random unapproved image
   *
   * Retrieves a random unapproved image. Must be logged in as admin to access this method.
   *
   * @api
-  *  
+  *
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function unapproved($sid=NULL) {
   $current = $this->user->current($sid);
-  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401); 
+  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
   $query = new \Peyote\Select('images');
   $query->columns('uid')
         ->where('approved', '=', 0)
@@ -425,7 +453,7 @@ class Image extends Base {
   * @param array $filter Array of options to filter image results.  Currently available options include format, animated, nsfw, approved and uploader.
   * @param int $count Number of results to return.
   */
- 
+
  public function random($filter = NULL, $count = 1) {
   if (!is_object($filter)) $filter = json_decode($filter, TRUE);
   $query = new ImageFilter\Random($filter, $count);
@@ -440,17 +468,17 @@ class Image extends Base {
   }
   return $image;
  }
- 
+
   /**
   * Recently added images
   *
   * Displays a list of images recently added
   *
   * @api
-  * 
+  *
   * @param int $count Number of results to display
   */
- 
+
  public function recent($count = 25) {
   $query = new \Peyote\Select('resources');
   $query->where('type', '=', 'upload')
@@ -470,17 +498,17 @@ class Image extends Base {
   }
   return $return;
  }
- 
+
   /**
   * Recently liked images
   *
   * Displays a list of images recently liked
   *
   * @api
-  * 
+  *
   * @param int $count Number of results to display
   */
- 
+
  public function recentLikes($count = 25) {
   $query = new \Peyote\Select('resources');
   $query->columns('image')
@@ -502,12 +530,12 @@ class Image extends Base {
   }
   return $return;
  }
- 
+
  /**
   * Get image with minimal data
   *
   * Retrieve information about an image. Only provides basic image and media data. Designed for other methods that require minimal data about an image.
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   */
  public function get_slim($image) {
@@ -524,19 +552,19 @@ class Image extends Base {
   $result['page_url'] = $setting->get('web_root') . $result['uid'];
   return $result;
  }
- 
+
  /**
   * Get image
   *
   * Retrieve information about an image.
   *
   * @api
-  * 
+  *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   * @param bool $brazzify Should Brazzzify.me url be returned
   */
- 
+
  public function get($image, $sid=NULL, $brazzify = FALSE) {
   $setting = new Setting;
   $current = $this->user->current($sid);
@@ -644,7 +672,7 @@ class Image extends Base {
   $result['likes'] = $this->image_stat($result['uid'], 'like');
   return $result;
  }
- 
+
  private function image_stat($image, $stat) {
   $query = new \Peyote\Select('resources');
   $query->columns('COUNT(*)')
@@ -664,7 +692,7 @@ class Image extends Base {
   } while (count($not_unique));
   return $uid;
  }
- 
+
  /**
   * Get stats
   *
@@ -672,7 +700,7 @@ class Image extends Base {
   *
   * @api
   */
- 
+
  public function stats() {
   $result = [];
   $query = new \Peyote\Select('images');
@@ -688,11 +716,11 @@ class Image extends Base {
   $result['approved'] = $this->db->fetch($query)[0]['COUNT(*)'];
   return $result;
  }
- 
+
  public function scale($image, $width = 240, $height = 160) {
   $imagedata = $this->get($image);
   $image = new \Imagick(ROOT_DIR . $imagedata['media']['primary']['file']);
-  
+
   $image = $image->coalesceImages();
 
   foreach ($image as $frame) {
@@ -700,7 +728,7 @@ class Image extends Base {
    $frame->setImagePage($width, $height, 0, 0);
   }
   //header('Content-type: '.$image->getImageMimeType());
-  return $image->getImagesBlob(); 
+  return $image->getImagesBlob();
  }
 
  /**
@@ -709,12 +737,12 @@ class Image extends Base {
   * Merge two images into one, merging any assoicated resources. Must be logged in as admin to use this method.
   *
   * @api
-  * 
+  *
   * @param string $image1 The 6-digit id of an image.
   * @param string $image2 The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function merge($image1, $image2, $sid=NULL) {
   $image = new Image();
   if (!$this->user->isAdmin($sid)) throw new \Exception(_('Must be an admin to access method'), 401);
@@ -736,33 +764,33 @@ class Image extends Base {
    'thumb' => $primary['thumb_url']
   ];
  }
- 
+
   /**
   * Is Animated
   *
   * Checks to see if image is animated
-  * 
+  *
   * @param string $image The 6-digit id of an image or image filename.
   * @param bool $search_by_filename If true, use filename instead of UID.
   */
- 
+
  public function isAnimated($image, $search_by_filename = FALSE) {
   if (!$search_by_filename) {
    $imagedata = $this->get($image);
    $image = $imagedata['media']['primary']['file'];
   }
   $image = new Imagick(ROOT_DIR.'/media/'.$image);
-  
+
   $animated = FALSE;
   $framecount = 0;
   foreach ($image as $frame) {
    $framecount++;
   }
-  
+
   if ($framecount > 1) $animated = TRUE;
   return $animated;
  }
- 
+
  private function allow_upload() {
   $setting = new Setting;
   $disable_upload = $setting->get('disable_upload');
@@ -771,5 +799,5 @@ class Image extends Base {
   }
   return TRUE;
  }
- 
+
 }
