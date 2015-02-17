@@ -168,7 +168,7 @@ class Image extends Base {
  /**
   * Remove image
   *
-  * Removes an image and everything associated with it. Must be logged on as admin to access this method.
+  * Removes an image and all data associated with it. Only the user that uploaded the image or an admin can use this method.
   *
   * @api
   *
@@ -177,9 +177,12 @@ class Image extends Base {
   */
 
  public function remove($image, $sid=NULL) {
-  $current = $this->user->current($sid);
-  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
+  $current_id = $this->user->current($sid)['id'];
   $data = $this->get($image);
+  //check permissions
+  $uploader = 'invalid';
+  if (isset($data['uploader']['id'])) $uploader = $data['uploader']['id'];
+  if (!$this->user->isAdmin($sid) AND ($current_id != $uploader)) throw new \Exception(_("You don't have permission to remove this image"), 401);
   //clean up resources
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image);

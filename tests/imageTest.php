@@ -2,7 +2,7 @@
 require_once('settings.inc');
 
 class imageTest extends PHPUnit_Framework_TestCase {
- 
+
  protected $image;
  protected $user;
  protected $imageurl;
@@ -14,7 +14,7 @@ class imageTest extends PHPUnit_Framework_TestCase {
  protected function tearDown(){
   unset($this->user);
  }
- 
+
 
  /**** addFromURL ****/
  /**** remove ****/
@@ -31,7 +31,33 @@ class imageTest extends PHPUnit_Framework_TestCase {
   }
   $this->fail('An expected exception has not been raised.');
  }
- 
+
+ public function test_remove_sameuser() {
+   $user = $this->user->login('testuser', 'testpass')['sid'];
+   $image = $this->image->addFromURL($this->imageurl, NULL, $user);
+   $this->assertArrayHasKey('uid', $image, 'UID missing from results.');
+   $this->image->remove($image['uid'], $user);
+   try {
+     $this->image->get($image['uid']);
+   }
+   catch (Exception $e) {
+     return;
+   }
+   $this->fail('An expected exception has not been raised.');
+ }
+
+ public function test_remove_nologin() {
+   $image = $this->image->addFromURL($this->imageurl);
+   $this->assertArrayHasKey('uid', $image, 'UID missing from results.');
+   try {
+     $this->image->remove($image['uid']);
+   }
+   catch (Exception $e) {
+    return;
+   }
+   $this->fail('An expected exception has not been raised.');
+ }
+
  /**** like ****/
  public function test_like() { //TODO: do this both authed and unauthed
   $image = $this->image->addFromURL($this->imageurl);
@@ -42,7 +68,7 @@ class imageTest extends PHPUnit_Framework_TestCase {
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->image->remove($image['uid'], $admin);
  }
- 
+
  /**** dislike ****/
  public function test_dislike() { //TODO: do this both authed and unauthed
   $image = $this->image->addFromURL($this->imageurl);
