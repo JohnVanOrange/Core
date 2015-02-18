@@ -166,6 +166,26 @@ class Image extends Base {
  }
 
  /**
+  * Can User Remove
+  *
+  * Check to see if a user has permissions to remove an image.
+  *
+  * @api
+  *
+  * @param string $image The 6-digit id of an image.
+  * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+  */
+
+ public function canRemove($image, $sid=NULL) {
+   $current_id = $this->user->current($sid)['id'];
+   $data = $this->get($image);
+   $uploader = 'invalid';
+   if (isset($data['uploader']['id'])) $uploader = $data['uploader']['id'];
+   if (!$this->user->isAdmin($sid) AND ($current_id != $uploader)) return FALSE;
+   return TRUE;
+ }
+
+ /**
   * Remove image
   *
   * Removes an image and all data associated with it. Only the user that uploaded the image or an admin can use this method.
@@ -177,12 +197,8 @@ class Image extends Base {
   */
 
  public function remove($image, $sid=NULL) {
-  $current_id = $this->user->current($sid)['id'];
+  if (!$this->canRemove($image, $sid)) throw new \Exception(_("You don't have permission to remove this image"), 401);
   $data = $this->get($image);
-  //check permissions
-  $uploader = 'invalid';
-  if (isset($data['uploader']['id'])) $uploader = $data['uploader']['id'];
-  if (!$this->user->isAdmin($sid) AND ($current_id != $uploader)) throw new \Exception(_("You don't have permission to remove this image"), 401);
   //clean up resources
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image);
