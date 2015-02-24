@@ -1,12 +1,12 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class Reddit extends Base {
 
  protected $log;
  protected $logfile;
  protected $images;
- 
+
  public function __construct() {
   parent::__construct();
   $this->image = new Image;
@@ -58,7 +58,7 @@ class Reddit extends Base {
   $last = end($parts);
   return 'http://i.qkme.me/'.$last.'.jpg';
  }
- 
+
  private function isDirectImage($post) {
   $parts = explode('.',$post['data']['url']);
   $last = end($parts);
@@ -70,11 +70,11 @@ class Reddit extends Base {
   );
   return array_search(strtolower($last),$valid);
  }
- 
+
  private function directImageProcess($post) {
   return $post['data']['url'];
  }
- 
+
  private function imgurProcess($post) {
   $this->isImgurAlbum($post);
   $id = $this->getImgurID($post);
@@ -133,5 +133,5 @@ class Reddit extends Base {
  private function addImage($url, $post) {
   return $this->image->addFromURL($url, 'http://www.reddit.com'.$post['data']['permalink']);
  }
- 
+
 }

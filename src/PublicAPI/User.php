@@ -1,23 +1,23 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class User extends Base {
 
  private $sid;
- 
+
  public function __construct() {
   parent::__construct();
   if (isset($_COOKIE['sid'])) $this->setSID($_COOKIE['sid']);
  }
- 
+
  private function getSecureID() {
   return $this->generateUID(16);
  }
- 
+
  private function passhash($pass, $salt) {
   return md5($salt.$pass);
  }
- 
+
  public function unAuthUser() {
   if (isset($_COOKIE['session'])) {
    $session = $_COOKIE['session'];
@@ -26,33 +26,33 @@ class User extends Base {
   }
   return $session;
  }
- 
+
  protected function setUnAuthUser() {
   $session = $this->getSecureID();
   $this->setCookie('session', $session);
   return $session;
  }
- 
+
  public function isAdmin($sid=NULL) {
   $user = $this->current($sid);
   if (!isset($user['type'])) $user['type'] = NULL;
   if ($user['type']>= 2) return TRUE;
   return FALSE;
  }
- 
+
  protected function isLoggedIn($sid=NULL) {
   $user = $this->current($sid);
   if ($user) return TRUE;
   return FALSE;
  }
- 
+
  /**
   * Get user
   *
   * Retrieve details about a user account.
   *
   * @api
-  * 
+  *
   * @param mixed $value By default, this is the user_id of an account. This can also be a username if the "search_by" parameter is set to "username".
   * @param string $search_by Valid values are 'id' or 'username'.
   */
@@ -80,7 +80,7 @@ class User extends Base {
   $user['uploads'] = $this->user_stat($user['id'], 'upload');
   return $user;
  }
- 
+
  private function user_stat($user_id, $stat) {
   $query = new \Peyote\Select('resources');
   $query->columns('COUNT(*)')
@@ -88,14 +88,14 @@ class User extends Base {
         ->where('user_id', '=', $user_id);
   return $this->db->fetch($query)[0]['COUNT(*)'];
  }
- 
+
  /**
   * Current user
   *
   * Retrieve user details of currently logged in account.
   *
   * @api
-  * 
+  *
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
 
@@ -134,18 +134,18 @@ class User extends Base {
  private function setSID($sid) {
   $this->sid = $sid;
  }
- 
+
  /**
   * Account login
   *
   * Login to an account.
   *
   * @api
-  * 
+  *
   * @param string $username Valid username.
   * @param string $password Valid password.
   */
- 
+
  public function login($username, $password) {
   $query = new \Peyote\Select('users');
   $query->where('username', '=', $username)
@@ -167,14 +167,14 @@ class User extends Base {
    'sid' => $sid
   );
  }
- 
+
  /**
   * Logout account
   *
   * Logout of an account.
   *
   * @api
-  * 
+  *
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
 
@@ -188,14 +188,14 @@ class User extends Base {
    'message' => _('Logged out')
   );
  }
- 
+
  /**
   * Add user
   *
   * Create new user account and login as that user.
   *
   * @api
-  * 
+  *
   * @param string $username Any unique string used to login to an account
   * @param string $password Any string
   * @param string $email This can also be any string, but a valid email address would be required to do any password recovery.
@@ -221,18 +221,18 @@ class User extends Base {
    'sid' => $login['sid']
   );
  }
- 
+
  /**
   * User's saved images
   *
   * Load all saved images for a user account.
   *
   * @api
-  * 
+  *
   * @param string $username Provide the username of the user to view their saved images. Currently can only view your own saved images when logged in. If not set, the currently logged in user will be used.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. Only required if the cookie sid header is not sent.
   */
- 
+
  public function saved($username = NULL, $sid=NULL) {
   $current = $this->current($sid);
   if ($username) {
@@ -259,18 +259,18 @@ class User extends Base {
   }
   return $return;
  }
- 
+
  /**
   * User's uploaded images
   *
   * Load all uploaded images for a user account.
   *
   * @api
-  * 
+  *
   * @param string $username Provide the username of the user to view their saved images. Currently can only view your own saved images when logged in. If not set, the currently logged in user will be used.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. Only required if the cookie sid header is not sent.
   */
- 
+
  public function uploaded($username = NULL, $sid=NULL) {
   $current = $this->current($sid);
   if ($username) {
@@ -297,7 +297,7 @@ class User extends Base {
   }
   return $return;
  }
- 
+
  /**
   * Request a reset of the users password
   *
@@ -307,7 +307,7 @@ class User extends Base {
   *
   * @param string $username Provide the username of the user to send the password reset email to.
   */
- 
+
  public function requestPwReset($username) {
   $setting = new Setting;
   $site_name = $setting->get('site_name');
@@ -340,7 +340,7 @@ class User extends Base {
    'message' => _('Reset email sent')
   );
  }
- 
+
  /**
   * Change password
   *
@@ -352,7 +352,7 @@ class User extends Base {
   * @param string $auth This is either a valid SID of a logged in user, or a password reset ID
   * @param string $type Valid values are "sid" or "pwreset"
   */
- 
+
  public function changepw($password, $auth, $type = 'sid') {
   if (!$password) throw new \Exception(_('Password is blank'));
   switch ($type) {
@@ -389,6 +389,6 @@ class User extends Base {
    'message' => _('Password changed')
   ];
  }
- 
- 
+
+
 }

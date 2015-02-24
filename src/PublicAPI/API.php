@@ -1,11 +1,11 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class API {
 
  public function __construct() {
  }
- 
+
  /*
   * Call public API methods
   *
@@ -14,23 +14,23 @@ class API {
   * @param string $method Method name to access.
   * @param mixed[] $params Associated array of named parameters and their values.
   */
- 
+
  public function call($method, $params=[]) {
     $result = explode('/',$method);
     $class = $result[0];
     $method = $result[1];
-   
+
     $valid_classes = [
-     'image' => 'JohnVanOrange\core\Image',
-     'user' => 'JohnVanOrange\core\User',
-     'tag' => 'JohnVanOrange\core\Tag',
-     'report' => 'JohnVanOrange\core\Report',
-     'reddit' => 'JohnVanOrange\core\Reddit',
-     'media' => 'JohnVanOrange\core\Media',
-     'ads' => 'JohnVanOrange\core\Ads',
-     'setting' => 'JohnVanOrange\core\Setting',
-     'blacklist' => 'JohnVanOrange\core\Blacklist',
-     'message' => 'JohnVanOrange\core\Message'
+     'image' => 'JohnVanOrange\PublicAPI\Image',
+     'user' => 'JohnVanOrange\PublicAPI\User',
+     'tag' => 'JohnVanOrange\PublicAPI\Tag',
+     'report' => 'JohnVanOrange\PublicAPI\Report',
+     'reddit' => 'JohnVanOrange\PublicAPI\Reddit',
+     'media' => 'JohnVanOrange\PublicAPI\Media',
+     'ads' => 'JohnVanOrange\PublicAPI\Ads',
+     'setting' => 'JohnVanOrange\PublicAPI\Setting',
+     'blacklist' => 'JohnVanOrange\PublicAPI\Blacklist',
+     'message' => 'JohnVanOrange\PublicAPI\Message'
      ];
     switch ($class) {
      case 'image':
@@ -49,13 +49,13 @@ class API {
       throw new \Exception(_('Invalid class/URL'));
      break;
     }
-   
+
     $reflectClass = new \ReflectionClass($class_name);
     $reflectMethod = $reflectClass->getMethod($method);
     $reflectParams = $reflectMethod->getParameters();
-     
+
     $indexed_params = [];
-     
+
     foreach($reflectParams as $param) {
      if (isset($params[$param->getName()])) {
       $indexed_params[] = $params[$param->getName()];
@@ -67,7 +67,7 @@ class API {
       }
      }
     }
-     
+
     $class_obj = new $class_name;
 
     return $reflectMethod->invokeArgs($class_obj, $indexed_params);

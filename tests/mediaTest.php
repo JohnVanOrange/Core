@@ -2,13 +2,13 @@
 require_once('settings.inc');
 
 class mediaTest extends PHPUnit_Framework_TestCase {
- 
+
  protected $media;
  protected $uid;
  protected $helper;
- 
+
  protected function setUp(){
-  $this->media = new JohnVanOrange\core\Media;
+  $this->media = new JohnVanOrange\PublicAPI\Media;
   $this->helper = new Helper;
   $this->uid = $this->helper->UID(6);
  }
@@ -37,11 +37,11 @@ class mediaTest extends PHPUnit_Framework_TestCase {
 
 }
 
-class Helper extends JohnVanOrange\core\Base {
+class Helper extends JohnVanOrange\PublicAPI\Base {
   public function db() {
     return $this->db;
   }
-  
+
   public function UID($length) {
     return $this->generateUID($length);
   }

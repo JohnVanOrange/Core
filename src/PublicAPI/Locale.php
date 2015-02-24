@@ -1,8 +1,8 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class Locale {
-	
+
 	public static function get() {
 		$locale = \Browser\Language::getLanguageLocale('_');
 

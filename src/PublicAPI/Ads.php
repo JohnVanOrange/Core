@@ -1,12 +1,12 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class Ads extends Base {
- 
+
  public function __construct() {
   parent::__construct();
  }
- 
+
  /**
   * Get ad
   *
@@ -14,7 +14,7 @@ class Ads extends Base {
   *
   * @api
   */
-  
+
  public function get() {
   $query = new \Peyote\Select('ads');
   $query->columns('title, ASIN')
@@ -24,5 +24,5 @@ class Ads extends Base {
   $ad = $this->db->fetch($query)[0];
   return $ad;
  }
- 
+
 }

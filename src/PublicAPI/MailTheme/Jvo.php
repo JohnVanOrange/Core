@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\core\MailTheme;
+namespace JohnVanOrange\PublicAPI\MailTheme;
 
 class Jvo extends Base {
 
@@ -10,7 +10,7 @@ class Jvo extends Base {
   self::$theme['button_color'] = "#ff8300";
   self::$theme['button_border'] = "#e67600";
   self::$theme['button_text'] = "#f3f3f3";
-  
+
   return self::$theme;
  }
 

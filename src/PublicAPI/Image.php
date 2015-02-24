@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 use Imagick;
 
 class Image extends Base {

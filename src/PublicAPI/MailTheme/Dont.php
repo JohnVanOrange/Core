@@ -1,7 +1,7 @@
 <?php
-namespace JohnVanOrange\core\MailTheme;
+namespace JohnVanOrange\PublicAPI\MailTheme;
 
-class Skin extends Base {
+class Dont extends Base {
 
  public static function get() {
   parent::initialize();
@@ -10,7 +10,7 @@ class Skin extends Base {
   self::$theme['button_color'] = "#d60b15";
   self::$theme['button_border'] = "#be0a13";
   self::$theme['button_text'] = "#ffffff";
-  
+
   return self::$theme;
  }
 

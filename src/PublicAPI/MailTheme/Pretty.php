@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\core\MailTheme;
+namespace JohnVanOrange\PublicAPI\MailTheme;
 
 class Pretty extends Base {
 
@@ -10,7 +10,7 @@ class Pretty extends Base {
   self::$theme['button_color'] = "#e5f268";
   self::$theme['button_border'] = "#e1f051";
   self::$theme['button_text'] = "#333333";
-  
+
   return self::$theme;
  }
 

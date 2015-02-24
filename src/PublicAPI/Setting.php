@@ -1,12 +1,12 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class Setting extends Base {
- 
+
  public function __construct() {
   parent::__construct();
  }
- 
+
  /**
   * Get setting
   *
@@ -16,14 +16,14 @@ class Setting extends Base {
   *
   * @param string $name Setting name
   */
-  
+
  public function get($name) {
   $query = new \Peyote\Select('settings');
   $query->where('name', '=', $name);
   $result = $this->db->fetch($query)[0];
   return $result['value'];
  }
- 
+
  /**
   * Update setting
   *
@@ -35,7 +35,7 @@ class Setting extends Base {
   * @param string $value Setting value
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
- 
+
  public function update($name, $value, $sid=NULL) {
   $user = new User;
   $current = $user->current($sid);
@@ -48,7 +48,7 @@ class Setting extends Base {
    'message' => _('Setting updated')
   ];
  }
- 
+
  /**
   * Display all settings
   *
@@ -65,5 +65,5 @@ class Setting extends Base {
   }
   return $list;
  }
- 
+
 }

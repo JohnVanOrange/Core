@@ -2,13 +2,13 @@
 require_once('settings.inc');
 
 class settingTest extends PHPUnit_Framework_TestCase {
- 
+
  protected $setting;
  protected $user;
- 
+
  protected function setUp(){
-  $this->setting = new JohnVanOrange\core\Setting;
-  $this->user = new JohnVanOrange\core\User;
+  $this->setting = new JohnVanOrange\PublicAPI\Setting;
+  $this->user = new JohnVanOrange\PublicAPI\User;
  }
  protected function tearDown(){
   unset($this->setting);
@@ -29,7 +29,7 @@ class settingTest extends PHPUnit_Framework_TestCase {
   $result = $this->setting->get('branch');
   $this->assertEquals($result, 'master', 'Incorrect secondary branch setting');
  }
- 
+
  public function test_set_notadmin() {
   $sid = $this->user->login('testuser', 'testpass')['sid'];
   try {
@@ -40,7 +40,7 @@ class settingTest extends PHPUnit_Framework_TestCase {
   }
   $this->fail('An expected exception has not been raised.');
  }
- 
+
  public function test_all() {
   $result = $this->setting->all();
   $this->assertContains('branch', $result, 'List missing an item');

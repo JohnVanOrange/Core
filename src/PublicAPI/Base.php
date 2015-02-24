@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class Base {
 
@@ -9,7 +9,7 @@ class Base {
  public function __construct() {
   $this->db = new DB('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);
  }
- 
+
  public function __call($name, $args) {
   throw new \Exception(_('Invalid method') . ' ' . $name);
  }
@@ -39,7 +39,7 @@ class Base {
   }
   return $uid;
  }
- 
+
  protected function log($text,$file) {
   $this->logs[] = $text;
   return TRUE;
@@ -48,7 +48,7 @@ class Base {
  protected function getLogs() {
   return $this->logs;
  }
- 
+
  protected function setCookie($name, $value, $expire=NULL, $path='/') {
   $setting = new Setting;
   if (!headers_sent()) {
@@ -61,16 +61,16 @@ class Base {
  }
 
  protected function text2slug($text) {
-  $output = htmlentities($text, ENT_COMPAT, "UTF-8", false); 
+  $output = htmlentities($text, ENT_COMPAT, "UTF-8", false);
   $output = preg_replace('/&([a-z]{1,2})(?:acute|lig|grave|ring|tilde|uml|cedil|caron);/i','\1',$output);
-  $output = html_entity_decode($output,ENT_COMPAT, "UTF-8"); 
+  $output = html_entity_decode($output,ENT_COMPAT, "UTF-8");
   $output = preg_replace('/[^a-z0-9-]+/i', '-', $output);
   $output = preg_replace('/-+/', '-', $output);
   $output = trim($output, '-');
   $output = strtolower($output);
   return $output;
  }
- 
+
  protected function siteURL() {
   $setting = new Setting;
   return parse_url($setting->get('web_root'));

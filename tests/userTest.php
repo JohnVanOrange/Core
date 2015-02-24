@@ -2,15 +2,15 @@
 require_once('settings.inc');
 
 class userTest extends PHPUnit_Framework_TestCase {
- 
+
  protected $user;
  protected function setUp(){
-  $this->user = new JohnVanOrange\core\User();
+  $this->user = new JohnVanOrange\PublicAPI\User();
  }
  protected function tearDown(){
   unset($this->user);
  }
- 
+
  /**** isAdmin ****/
  public function test_is_admin_true() {
   $sid = $this->user->login('adminuser', 'testpass')['sid'];
@@ -22,7 +22,7 @@ class userTest extends PHPUnit_Framework_TestCase {
   $isAdmin = $this->user->isAdmin($sid);
   $this->assertFalse($isAdmin, 'User is shouldn\'t be admin');
  }
- 
+
  /**** get ****/
  /* TODO: need to get by id as well, but that's less important */
  public function test_get_user_by_username() {
@@ -49,7 +49,7 @@ class userTest extends PHPUnit_Framework_TestCase {
   }
   $this->fail('An expected exception has not been raised.');
  }
- 
+
  /**** current ****/
  public function test_current_loggedin() {
   $sid = $this->user->login('testuser', 'testpass')['sid'];
@@ -60,7 +60,7 @@ class userTest extends PHPUnit_Framework_TestCase {
   $current = $this->user->current();
   $this->assertFalse($current, 'Current user should return false');
  }
- 
+
  /**** login ****/
  public function test_login_success() {
   $sid = $this->user->login('testuser', 'testpass')['sid'];
@@ -75,7 +75,7 @@ class userTest extends PHPUnit_Framework_TestCase {
   }
   $this->fail('An expected exception has not been raised.');
  }
- 
+
  /**** logout ****/
  public function test_logout() {
   $sid = $this->user->login('testuser', 'testpass')['sid'];
@@ -85,7 +85,7 @@ class userTest extends PHPUnit_Framework_TestCase {
   $current = $this->user->current($sid);
   $this->assertFalse($current, 'Current user should return false');
  }
- 
+
  /**** add ****/
  public function test_add_success() {
   $uid = new Uid;
@@ -126,7 +126,7 @@ class userTest extends PHPUnit_Framework_TestCase {
   }
   $this->fail('An expected exception has not been raised.');
  }
- 
+
  /**** saved ****/
  public function test_saved_loggedin() {
   $sid = $this->user->login('testuser', 'testpass')['sid'];
@@ -152,7 +152,7 @@ class userTest extends PHPUnit_Framework_TestCase {
   }
   $this->fail('An expected exception has not been raised.');
  }
- 
+
  /**** uploaded ****/
  public function test_uploaded_loggedin() {
   $sid = $this->user->login('testuser', 'testpass')['sid'];
@@ -178,10 +178,10 @@ class userTest extends PHPUnit_Framework_TestCase {
   }
   $this->fail('An expected exception has not been raised.');
  }
- 
+
 }
 
-class Uid extends JohnVanOrange\core\Base{
+class Uid extends JohnVanOrange\PublicAPI\Base{
  public function generate($length = 10) {
   return $this->generateUID($length);
  }

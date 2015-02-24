@@ -1,8 +1,8 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 class Resource extends Base {
- 
+
  private $user;
 
  public function __construct() {
@@ -19,7 +19,7 @@ class Resource extends Base {
   } else {
    $unauth_user = $this->user->unAuthUser();
   }
-  
+
   $ip = '';
   if (isset($_SERVER['REMOTE_ADDR'])) $ip = $_SERVER['REMOTE_ADDR'];
   $data = [
@@ -37,7 +37,7 @@ class Resource extends Base {
         ->values(array_values($data));
   return $this->db->fetch($query);
  }
- 
+
  public function merge($to, $from) {
   if (!$this->user->isAdmin()) throw new \Exception(_('Must be an admin to access method'), 401);
   $query = new \Peyote\Update('resources');
@@ -46,5 +46,5 @@ class Resource extends Base {
   $this->db->fetch($query);
   return TRUE;
  }
- 
+
 }

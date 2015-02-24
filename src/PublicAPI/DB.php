@@ -1,10 +1,10 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 use PDO;
 
 class DB extends PDO {
- 
+
  private $dsn, $user, $pass, $dboptions, $setup;
 
  public function __construct($dsn, $user, $pass, $options=array()) {
@@ -21,7 +21,7 @@ class DB extends PDO {
   $s->execute($query->getParams());
   return $s->fetchAll();
  }
- 
+
  public function exec($sql) {
   if (!$this->setup) $this->setup();
   return parent::exec($sql);
@@ -34,5 +34,5 @@ class DB extends PDO {
   $this->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,PDO::FETCH_ASSOC);
   $this->setAttribute(PDO::ATTR_PERSISTENT,TRUE);
  }
- 
+
 }
