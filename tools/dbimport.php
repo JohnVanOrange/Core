@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\core;
+namespace JohnVanOrange\PublicAPI;
 
 require_once('../vendor/autoload.php');
 require_once('../settings.inc');
@@ -9,7 +9,7 @@ class DBImport extends Base {
  public function __construct($options=array()) {
   parent::__construct();
  }
- 
+
  public function run($sql) {
   $result = $this->db->exec($sql);
   if ($result === FALSE) {
