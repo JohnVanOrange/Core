@@ -1,12 +1,12 @@
 <?php
-namespace JohnVanOrange\PublicAPI\MailTheme;
+namespace JohnVanorange\API\MailTheme;
 
 class Base {
 
  protected static $theme;
 
  public static function initialize() {
-  $setting = new \JohnVanOrange\PublicAPI\Setting;
+  $setting = new \JohnVanorange\API\Setting;
 
   self::$theme['web_root'] = $setting->get('web_root');
   self::$theme['site_name'] = $setting->get('site_name');

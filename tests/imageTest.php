@@ -7,8 +7,8 @@ class imageTest extends PHPUnit_Framework_TestCase {
  protected $user;
  protected $imageurl;
  protected function setUp(){
-  $this->image = new JohnVanOrange\PublicAPI\Image();
-  $this->user = new JohnVanOrange\PublicAPI\User();
+  $this->image = new JohnVanOrange\API\Image();
+  $this->user = new JohnVanOrange\API\User();
   $this->imageurl = 'http://jvo.io/icons/orange_slice/64.png';
  }
  protected function tearDown(){

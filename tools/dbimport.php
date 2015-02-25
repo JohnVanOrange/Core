@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\PublicAPI;
+namespace JohnVanOrange\API;
 
 require_once('../vendor/autoload.php');
 require_once('../settings.inc');

@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\PublicAPI;
+namespace JohnVanorange\API;
 
 class Blacklist extends Base {
 

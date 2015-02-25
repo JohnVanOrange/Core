@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\PublicAPI;
+namespace JohnVanorange\API;
 
 use \S3 as AmazonS3;
 

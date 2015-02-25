@@ -1,7 +1,7 @@
 <?php
-namespace JohnVanOrange\PublicAPI\MailTheme;
+namespace JohnVanorange\API\MailTheme;
 
-class Skin extends Base {
+class Dont extends Base {
 
  public static function get() {
   parent::initialize();

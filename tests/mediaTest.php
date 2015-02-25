@@ -8,7 +8,7 @@ class mediaTest extends PHPUnit_Framework_TestCase {
  protected $helper;
 
  protected function setUp(){
-  $this->media = new JohnVanOrange\PublicAPI\Media;
+  $this->media = new JohnVanOrange\API\Media;
   $this->helper = new Helper;
   $this->uid = $this->helper->UID(6);
  }
@@ -37,7 +37,7 @@ class mediaTest extends PHPUnit_Framework_TestCase {
 
 }
 
-class Helper extends JohnVanOrange\PublicAPI\Base {
+class Helper extends JohnVanOrange\API\Base {
   public function db() {
     return $this->db;
   }

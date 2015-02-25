@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanOrange\PublicAPI\ImageFilter;
+namespace JohnVanorange\API\ImageFilter;
 
 class Base extends \Peyote\Select {
 

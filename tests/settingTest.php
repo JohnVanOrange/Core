@@ -7,8 +7,8 @@ class settingTest extends PHPUnit_Framework_TestCase {
  protected $user;
 
  protected function setUp(){
-  $this->setting = new JohnVanOrange\PublicAPI\Setting;
-  $this->user = new JohnVanOrange\PublicAPI\User;
+  $this->setting = new JohnVanOrange\API\Setting;
+  $this->user = new JohnVanOrange\API\User;
  }
  protected function tearDown(){
   unset($this->setting);

@@ -5,7 +5,7 @@ class userTest extends PHPUnit_Framework_TestCase {
 
  protected $user;
  protected function setUp(){
-  $this->user = new JohnVanOrange\PublicAPI\User();
+  $this->user = new JohnVanOrange\API\User();
  }
  protected function tearDown(){
   unset($this->user);
@@ -181,7 +181,7 @@ class userTest extends PHPUnit_Framework_TestCase {
 
 }
 
-class Uid extends JohnVanOrange\PublicAPI\Base{
+class Uid extends JohnVanOrange\API\Base{
  public function generate($length = 10) {
   return $this->generateUID($length);
  }
