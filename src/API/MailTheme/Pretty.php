@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanorange\API\MailTheme;
+namespace JohnVanOrange\API\MailTheme;
 
 class Pretty extends Base {
 

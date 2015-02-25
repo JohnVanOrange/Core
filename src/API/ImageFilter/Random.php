@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanorange\API\ImageFilter;
+namespace JohnVanOrange\API\ImageFilter;
 
 class Random extends Base {
 

@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanorange\API;
+namespace JohnVanOrange\API;
 
 class Mail extends \Swift_Message {
 
@@ -70,7 +70,7 @@ class Mail extends \Swift_Message {
   }
 
   $setting = new Setting;
-  $themeclass = 'JohnVanOrange\Public\MailTheme\\' . ucfirst($setting->get('theme'));
+  $themeclass = 'JohnVanOrange\API\MailTheme\\' . ucfirst($setting->get('theme'));
   $data['theme'] = $themeclass::get();
 
   return $template->render($data);

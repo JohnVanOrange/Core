@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanorange\API;
+namespace JohnVanOrange\API;
 
 class Message extends Base {
 

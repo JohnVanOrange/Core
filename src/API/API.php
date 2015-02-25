@@ -1,5 +1,5 @@
 <?php
-namespace JohnVanorange\API;
+namespace JohnVanOrange\API;
 
 class API {
 
@@ -21,16 +21,16 @@ class API {
     $method = $result[1];
 
     $valid_classes = [
-     'image' => 'JohnVanorange\API\Image',
-     'user' => 'JohnVanorange\API\User',
-     'tag' => 'JohnVanorange\API\Tag',
-     'report' => 'JohnVanorange\API\Report',
-     'reddit' => 'JohnVanorange\API\Reddit',
-     'media' => 'JohnVanorange\API\Media',
-     'ads' => 'JohnVanorange\API\Ads',
-     'setting' => 'JohnVanorange\API\Setting',
-     'blacklist' => 'JohnVanorange\API\Blacklist',
-     'message' => 'JohnVanorange\API\Message'
+     'image' => 'JohnVanOrange\API\Image',
+     'user' => 'JohnVanOrange\API\User',
+     'tag' => 'JohnVanOrange\API\Tag',
+     'report' => 'JohnVanOrange\API\Report',
+     'reddit' => 'JohnVanOrange\API\Reddit',
+     'media' => 'JohnVanOrange\API\Media',
+     'ads' => 'JohnVanOrange\API\Ads',
+     'setting' => 'JohnVanOrange\API\Setting',
+     'blacklist' => 'JohnVanOrange\API\Blacklist',
+     'message' => 'JohnVanOrange\API\Message'
      ];
     switch ($class) {
      case 'image':
