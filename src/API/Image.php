@@ -223,7 +223,7 @@ class Image extends Base {
         unlink(ROOT_DIR . $i['file']);
         break;
       case 's3':
-        $s3 = new S3;
+        $s3 = new S3($i['storage_id']);
         $s3->deleteObject($s3->get_bucket(), $i['file']);
         break;
     }

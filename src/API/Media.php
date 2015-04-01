@@ -71,6 +71,7 @@ class Media extends Base {
                   'media.size',
                   'media.type',
                   'storage.type AS storage_type',
+                  'storage.id AS storage_id',
                   'storage.path',
                   'storage.endpoint',
                   'storage.bucket')
