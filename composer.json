@@ -31,7 +31,8 @@
   },
  "autoload" : {
   "psr-4" : {
-    "JohnVanOrange\\API\\" : "src/API"
+    "JohnVanOrange\\API\\" : "src/API",
+    "JohnVanOrange\\Core\\" : "src/Core"
   }
  }
 }
