@@ -35,7 +35,6 @@ class imageTest extends PHPUnit_Framework_TestCase {
  public function test_remove_sameuser() {
    $image_url = 'http://jvo.storage.googleapis.com/1b08d5a8576a72b629ae1b1a1e5a1dcd.jpeg';
    $user = $this->user->login('testuser', 'testpass')['sid'];
-   echo 'User sid: ' . $user;
    $image = $this->image->addFromURL($image_url, NULL, $user);
    $this->assertArrayHasKey('uid', $image, 'UID missing from results.');
    $this->image->remove($image['uid'], $user);
