@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `resources` (
   `value` int(8) default NULL,
   `type` varchar(8) collate utf8_unicode_ci NOT NULL,
   `public` tinyint(1) NOT NULL default '0',
+  `unauth_user` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
   KEY `image` (`image`),
   KEY `user_id` (`user_id`),
   KEY `value_type` (`value`,`type`)
