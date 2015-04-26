@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS `images` (
   `display` tinyint(1) NOT NULL default '1',
   `nsfw` tinyint(1) NOT NULL default '0',
   `approved` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `filename` (`filename`)
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `imgur_history` (
