@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `resources` (
   `ip` varchar(15) collate utf8_unicode_ci default NULL,
   `image` varchar(6) character set utf8 collate utf8_bin NOT NULL,
   `user_id` int(8) unsigned default NULL,
+  `tag_id` int(8) unsigned DEFAULT NULL,
   `value` int(8) default NULL,
   `type` varchar(8) collate utf8_unicode_ci NOT NULL,
   `public` tinyint(1) NOT NULL default '0',
