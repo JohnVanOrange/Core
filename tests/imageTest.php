@@ -9,7 +9,6 @@ class imageTest extends PHPUnit_Framework_TestCase {
  protected function setUp(){
   $this->image = new JohnVanOrange\API\Image();
   $this->user = new JohnVanOrange\API\User();
-  $this->imageurl = 'http://jvo.io/icons/orange_slice/64.png';
  }
  protected function tearDown(){
   unset($this->user);
@@ -19,7 +18,8 @@ class imageTest extends PHPUnit_Framework_TestCase {
  /**** addFromURL ****/
  /**** remove ****/
  public function test_addfromurl_remove() {
-  $image = $this->image->addFromURL($this->imageurl);
+  $image_url = 'http://jvo.io/icons/orange_slice/64.png';
+  $image = $this->image->addFromURL($image_url);
   $this->assertArrayHasKey('uid', $image, 'UID missing from results.');
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->image->remove($image['uid'], $admin);
@@ -33,7 +33,7 @@ class imageTest extends PHPUnit_Framework_TestCase {
  }
 
  public function test_remove_sameuser() {
-   $image_url = 'http://jvo.storage.googleapis.com/1b08d5a8576a72b629ae1b1a1e5a1dcd.jpeg';
+   $image_url = 'http://jvo.io/icons/orange_slice/36.png';
    $user = $this->user->login('testuser', 'testpass')['sid'];
    $image = $this->image->addFromURL($image_url, NULL, $user);
    $this->assertArrayHasKey('uid', $image, 'UID missing from results.');
@@ -48,7 +48,8 @@ class imageTest extends PHPUnit_Framework_TestCase {
  }
 
  public function test_remove_nologin() {
-   $image = $this->image->addFromURL($this->imageurl);
+   $image_url = 'http://jvo.io/icons/orange_slice/32.png';
+   $image = $this->image->addFromURL($image_url);
    $this->assertArrayHasKey('uid', $image, 'UID missing from results.');
    try {
      $this->image->remove($image['uid']);
@@ -61,7 +62,8 @@ class imageTest extends PHPUnit_Framework_TestCase {
 
  /**** like ****/
  public function test_like() { //TODO: do this both authed and unauthed
-  $image = $this->image->addFromURL($this->imageurl);
+  $image_url = 'http://jvo.io/icons/orange_slice/16.png';
+  $image = $this->image->addFromURL($image_url);
   $user = $this->user->login('testuser', 'testpass')['sid'];
   $this->image->like($image['uid'], $user);
   $result = $this->image->get($image['uid'], $user);
@@ -72,7 +74,8 @@ class imageTest extends PHPUnit_Framework_TestCase {
 
  /**** dislike ****/
  public function test_dislike() { //TODO: do this both authed and unauthed
-  $image = $this->image->addFromURL($this->imageurl);
+  $image_url = 'http://jvo.io/icons/orange_slice/30.png';
+  $image = $this->image->addFromURL($image_url);
   $user = $this->user->login('testuser', 'testpass')['sid'];
   $this->image->dislike($image['uid'], $user);
   $result = $this->image->get($image['uid'], $user);

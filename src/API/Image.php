@@ -181,7 +181,6 @@ class Image extends Base {
    $data = $this->get($image);
    $uploader = 'invalid';
    if (isset($data['uploader']['id'])) $uploader = $data['uploader']['id'];
-   throw new \Exception('current sid: ' . $current_id . " uploader: " . $uploader);
    if (!$this->user->isAdmin($sid) AND ($current_id != $uploader)) return FALSE;
    return TRUE;
  }
