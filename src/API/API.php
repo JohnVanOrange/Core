@@ -27,7 +27,6 @@ class API {
      'report' => 'JohnVanOrange\API\Report',
      'reddit' => 'JohnVanOrange\API\Reddit',
      'media' => 'JohnVanOrange\API\Media',
-     'ads' => 'JohnVanOrange\API\Ads',
      'setting' => 'JohnVanOrange\API\Setting',
      'blacklist' => 'JohnVanOrange\API\Blacklist',
      'message' => 'JohnVanOrange\API\Message'
@@ -39,7 +38,6 @@ class API {
      case 'report':
      case 'reddit':
      case 'media':
-     case 'ads':
      case 'setting':
      case 'blacklist':
      case 'message':
