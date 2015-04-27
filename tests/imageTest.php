@@ -5,7 +5,6 @@ class imageTest extends PHPUnit_Framework_TestCase {
 
  protected $image;
  protected $user;
- protected $imageurl;
  protected function setUp(){
   $this->image = new JohnVanOrange\API\Image();
   $this->user = new JohnVanOrange\API\User();
@@ -16,6 +15,13 @@ class imageTest extends PHPUnit_Framework_TestCase {
 
 
  /**** addFromURL ****/
+ 
+  /**** random ****/
+  public function test_random() {
+   $random = $this->image->random();
+   $this->assertArrayHasKey('uid', $random, 'UID missing from results.');
+  }
+ 
  /**** remove ****/
  public function test_addfromurl_remove() {
   $image_url = 'http://jvo.io/icons/orange_slice/64.png';
