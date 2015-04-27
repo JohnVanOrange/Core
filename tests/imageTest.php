@@ -18,8 +18,13 @@ class imageTest extends PHPUnit_Framework_TestCase {
  
   /**** random ****/
   public function test_random() {
+   $image_url = 'http://jvo.io/icons/orange_slice/16.png';
+   $image = $this->image->addFromURL($image_url);
    $random = $this->image->random();
    $this->assertArrayHasKey('uid', $random, 'UID missing from results.');
+   //cleanup
+   $admin = $this->user->login('adminuser', 'testpass')['sid'];
+   $this->image->remove($image['uid'], $admin);
   }
  
  /**** remove ****/
@@ -74,6 +79,7 @@ class imageTest extends PHPUnit_Framework_TestCase {
   $this->image->like($image['uid'], $user);
   $result = $this->image->get($image['uid'], $user);
   $this->assertArrayHasKey('like', $result['data'], 'Like data missing from results.');
+  //cleanup
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->image->remove($image['uid'], $admin);
  }
@@ -86,6 +92,7 @@ class imageTest extends PHPUnit_Framework_TestCase {
   $this->image->dislike($image['uid'], $user);
   $result = $this->image->get($image['uid'], $user);
   $this->assertArrayHasKey('dislike', $result['data'], 'Like data missing from results.');
+  //cleanup
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->image->remove($image['uid'], $admin);
  }
