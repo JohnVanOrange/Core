@@ -23,7 +23,10 @@ script:
   - phpunit --coverage-clover build/logs/clover.xml
 after_script:
   - php vendor/bin/coveralls -v
+  - vendor/bin/test-reporter
 matrix:
   allow_failures:
     - php: hhvm
- 
+addons:
+ code_climate:
+  repo_token: 473ed57db596678b2651bb88d7d33e0f559ae503b669a23163beb9050964d78a
