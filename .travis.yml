@@ -5,12 +5,12 @@ php:
  - 5.5
  - 5.6
  - hhvm
-before_script:
- - mkdir -p media/thumbs/
-
+ install:
  - printf "\n" | pecl install imagick
  - composer self-update
  - composer install --prefer-source --dev --no-interaction
+before_script:
+ - mkdir -p media/thumbs/
  - cp tests/travis/settings.inc.travis settings.inc
  - cp tests/travis/orange_slice16.png media/
  - mysql -e 'create database jvo_test;'
