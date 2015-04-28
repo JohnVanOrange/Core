@@ -4,10 +4,10 @@ php:
  - 5.4
  - 5.5
  - 5.6
+ - 7
  - hhvm
 install:
  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then printf "\n" | pecl install imagick; fi
- - printf "\n" | pecl install imagick
  - composer self-update
  - composer install --prefer-source --dev --no-interaction
 before_script:
@@ -28,6 +28,7 @@ after_script:
 matrix:
   allow_failures:
     - php: hhvm
+    - php: 7
 addons:
  code_climate:
   repo_token: 473ed57db596678b2651bb88d7d33e0f559ae503b669a23163beb9050964d78a
