@@ -10,7 +10,6 @@ install:
  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then printf "\n" | pecl install imagick; fi
  - if [ "$TRAVIS_PHP_VERSION" == 'hhvm' ]; then PHPINI=/etc/hhvm/php.ini; echo "hhvm.enable_zend_compat = true" >> $PHPINI; fi
  - composer install --prefer-source --dev --no-interaction
- - sudo apt-get install -y imagemagick
 before_script:
  - mkdir -p media/thumbs/
  - cp tests/travis/settings.inc.travis settings.inc
@@ -22,7 +21,8 @@ before_script:
  - cd ..
 script:
   - mkdir -p build/logs
-  - phpunit --coverage-clover build/logs/clover.xml
+  - if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then phpunit --coverage-clover build/logs/clover.xml; fi
+  - if [ "$TRAVIS_PHP_VERSION" == 'hhvm' ]; then  phpunit; fi
 after_script:
   - php vendor/bin/coveralls -v
   - vendor/bin/test-reporter
