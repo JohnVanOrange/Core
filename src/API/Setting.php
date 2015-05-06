@@ -18,7 +18,7 @@ class Setting extends Base {
   */
 
  public function get($name) {
-  $query = new \Peyote\Select('settings');
+  $query = new \Peyote\Select($this->db_table());
   $query->where('name', '=', $name);
   $result = $this->db->fetch($query)[0];
   return $result['value'];
@@ -40,7 +40,7 @@ class Setting extends Base {
   $user = new User;
   $current = $user->current($sid);
   if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
-  $query = new \Peyote\Update('settings');
+  $query = new \Peyote\Update($this->db_table());
   $query->set(['value' => $value])
         ->where('name', '=', $name);
   $this->db->fetch($query);
@@ -57,13 +57,18 @@ class Setting extends Base {
   * @api
   */
  public function all() {
-  $query = new \Peyote\Select('settings');
+  $query = new \Peyote\Select($this->db_table());
   $query->columns('name');
   $result = $this->db->fetch($query);
   foreach($result as $r) {
    $list[] = $r['name'];
   }
   return $list;
+ }
+
+ private function db_table() {
+  if ( defined('SETTINGS_TABLE') ) return SETTINGS_TABLE;
+  return 'settings';
  }
 
 }
