@@ -1,4 +1,5 @@
 vendor
+coverage-report
 error_log
 settings.inc
 .project
