@@ -40,7 +40,7 @@ class User extends Base {
   return FALSE;
  }
 
- protected function isLoggedIn($sid=NULL) {
+ public function isLoggedIn($sid=NULL) {
   $user = $this->current($sid);
   if ($user) return TRUE;
   return FALSE;

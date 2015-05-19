@@ -20,8 +20,8 @@ class Setting extends Base {
  public function get($name) {
   $query = new \Peyote\Select($this->db_table());
   $query->where('name', '=', $name);
-  $result = $this->db->fetch($query)[0];
-  return $result['value'];
+  $result = $this->db->fetch($query);
+  if (isset($result[0])) return $result[0]['value'];
  }
 
  /**

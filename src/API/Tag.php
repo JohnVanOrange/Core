@@ -23,6 +23,11 @@ class Tag extends Base {
   */
 
  public function add($name, $image, $sid = NULL) {
+  $setting = new Setting;
+  if ($setting->get('tags_need_auth')) {
+    $user = new User;
+    if ( !$user->isLoggedIn($sid) ) throw new \Exception('Must be logged in to add a tag', 1032);
+  }
   if (strlen($name) < 1 OR $name == NULL) throw new \Exception(_('Tag name cannot be empty'));
   if (strlen($image) !== 6) throw new \Exception(_('Invalid image UID'));
   $tag = htmlspecialchars(trim(stripslashes($name)));

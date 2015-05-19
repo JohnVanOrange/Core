@@ -114,6 +114,7 @@ INSERT INTO `settings` (`name`, `value`) VALUES
 ('show_brazz', '0'),
 ('show_social', '1'),
 ('show_jvon', '1'),
+('tags_need_auth', '0'),
 ('disable_upload', '0'),
 ('fb_app_id', NULL),
 ('amazon_aff', NULL),
