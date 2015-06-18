@@ -32,7 +32,7 @@ class Message extends Base {
    $mail->sendMessage([$email, $name], 'Message Sent to Admin', 'admin_message_user_copy', ['message' => $message]);
   }
   return array(
-   'message' => _('Message sent')
+   'message' => 'Message sent'
   );
  }
 

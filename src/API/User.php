@@ -71,7 +71,7 @@ class User extends Base {
    break;
   }
   $user = $this->db->fetch($query);
-  if (!$user) throw new \Exception(_('User not found'), 1200);
+  if (!$user) throw new \Exception('User not found', 1200);
   if (isset($user[0])) $user = $user[0];
   if (isset($user['email'])) $user['email_hash'] = md5($user['email']);
   unset($user['email']);
@@ -151,10 +151,10 @@ class User extends Base {
   $query->where('username', '=', $username)
         ->limit(1);
   $userdata = $this->db->fetch($query);
-  if (!isset($userdata[0])) throw new \Exception(_('User not found'));
+  if (!isset($userdata[0])) throw new \Exception('User not found');
   $userdata = $userdata[0];
   $pwhash = $this->passhash($password,$userdata['salt']);
-  if ($pwhash != $userdata['password']) throw new \Exception(_('Invalid password'));
+  if ($pwhash != $userdata['password']) throw new \Exception('Invalid password');
   //succesfully login
   $sid = $this->getSecureID();
   $this->setCookie('sid', $sid);
@@ -163,7 +163,7 @@ class User extends Base {
         ->values([$userdata['id'],$sid]);
   $this->db->fetch($query);
   return array(
-   'message' => _('Login successful'),
+   'message' => 'Login successful',
    'sid' => $sid
   );
  }
@@ -185,7 +185,7 @@ class User extends Base {
   $this->db->fetch($query);
   $this->setCookie('sid','', 1);
   return array(
-   'message' => _('Logged out')
+   'message' => 'Logged out'
   );
  }
 
@@ -202,14 +202,14 @@ class User extends Base {
   */
 
  public function add($username, $password, $email) {
-  if (!isset($username)) throw new \Exception(_('No username specified'));
-  if (!isset($password)) throw new \Exception(_('No password specified'));
-  if (!isset($email)) throw new \Exception(_('No email specified'));
+  if (!isset($username)) throw new \Exception('No username specified');
+  if (!isset($password)) throw new \Exception('No password specified');
+  if (!isset($email)) throw new \Exception('No email specified');
   $query = new \Peyote\Select('users');
   $query->where('username', '=', $username)
         ->limit(1);
   $result = $this->db->fetch($query);
-  if ($result) throw new \Exception(_('Username already exists'));
+  if ($result) throw new \Exception('Username already exists');
   $salt = $this->getSecureID();
   $query = new \Peyote\Insert('users');
   $query->columns(['username', 'password', 'salt', 'email'])
@@ -217,7 +217,7 @@ class User extends Base {
   $this->db->fetch($query);
   $login = $this->login($username, $password);
   return array(
-   'message' => _('User added'),
+   'message' => 'User added',
    'sid' => $login['sid']
   );
  }
@@ -237,7 +237,7 @@ class User extends Base {
   $current = $this->current($sid);
   if ($username) {
    $user = $this->get($username, 'username');
-   if ($current['id'] != $user['id']) throw new \Exception(_('This users saved images are not publicly shared'));
+   if ($current['id'] != $user['id']) throw new \Exception('This users saved images are not publicly shared');
   } else {
    $user = $current;
   }
@@ -275,7 +275,7 @@ class User extends Base {
   $current = $this->current($sid);
   if ($username) {
    $user = $this->get($username, 'username');
-   if ($current['id'] != $user['id']) throw new \Exception(_('This users uploaded images are not publicly shared'));
+   if ($current['id'] != $user['id']) throw new \Exception('This users uploaded images are not publicly shared');
   } else {
    $user = $current;
   }
@@ -337,7 +337,7 @@ class User extends Base {
   ];
   $message->sendMessage([$email[0]['email']], 'Password reset request for '. $site_name, 'pwreset', $data);
   return array(
-   'message' => _('Reset email sent')
+   'message' => 'Reset email sent'
   );
  }
 
@@ -354,7 +354,7 @@ class User extends Base {
   */
 
  public function changepw($password, $auth, $type = 'sid') {
-  if (!$password) throw new \Exception(_('Password is blank'));
+  if (!$password) throw new \Exception('Password is blank');
   switch ($type) {
    case 'pwreset':
     $query = new \Peyote\Select('resources');
@@ -362,7 +362,7 @@ class User extends Base {
           ->where('value', '=', $auth)
           ->limit(1);
     $user_id = $this->db->fetch($query)[0]['user_id'];
-    if (!$user_id) throw new \Exception(_('Password reset key not found (link may have already been used)'));
+    if (!$user_id) throw new \Exception('Password reset key not found (link may have already been used)');
     $query = new \Peyote\Delete('resources');
     $query->where('value', '=', $auth)
           ->limit(1);
@@ -374,7 +374,7 @@ class User extends Base {
           ->where('sid', '=', $auth)
           ->limit(1);
     $user_id = $this->db->fetch($query)[0]['user_id'];
-    if (!$user_id) throw new \Exception(_('User session error'));
+    if (!$user_id) throw new \Exception('User session error');
     break;
   }
   $salt = $this->getSecureID();
@@ -386,7 +386,7 @@ class User extends Base {
         ->where('id', '=', $user_id);
   $this->db->fetch($query);
   return [
-   'message' => _('Password changed')
+   'message' => 'Password changed'
   ];
  }
 

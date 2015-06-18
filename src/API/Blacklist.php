@@ -20,17 +20,17 @@ class Blacklist extends Base {
 
  public function add($name, $sid = NULL) {
   $user = new User;
-  if (!$user->isAdmin($sid)) throw new \Exception(_('Must be an admin to access method'), 401);
-  if (strlen($name) < 1 OR $name == NULL) throw new \Exception(_('Tag name cannot be empty'));
+  if (!$user->isAdmin($sid)) throw new \Exception('Must be an admin to access method', 401);
+  if (strlen($name) < 1 OR $name == NULL) throw new \Exception('Tag name cannot be empty');
   $tag = htmlspecialchars(trim(stripslashes($name)));
   $slug = $this->text2slug($tag);
-  if ($slug == '') throw new \Exception(_('Invalid tag name'), 1030);
+  if ($slug == '') throw new \Exception('Invalid tag name', 1030);
 
   $res = new Resource;
   $res->add('bl', NULL, $sid, $slug);
 
   return [
-   'message' => _('Tag added to blacklist'),
+   'message' => 'Tag added to blacklist',
   ];
  }
 
@@ -45,10 +45,10 @@ class Blacklist extends Base {
   */
 
  public function check($name) {
-  if (strlen($name) < 1 OR $name == NULL) throw new \Exception(_('Tag name cannot be empty'));
+  if (strlen($name) < 1 OR $name == NULL) throw new \Exception('Tag name cannot be empty');
   $tag = htmlspecialchars(trim(stripslashes($name)));
   $slug = $this->text2slug($tag);
-  if ($slug == '') throw new \Exception(_('Invalid tag name'), 1030);
+  if ($slug == '') throw new \Exception('Invalid tag name', 1030);
 
   $query = new \Peyote\Select('resources');
   $query->where('value', '=', $slug)

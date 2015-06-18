@@ -7,10 +7,6 @@ class PublicAPI {
  private $method;
  private $req;
 
- public function __construct() {
-  Locale::get();
- }
-
  public function setClass($class) {
   $this->class = $class;
  }

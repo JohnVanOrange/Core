@@ -39,13 +39,13 @@ class Setting extends Base {
  public function update($name, $value, $sid=NULL) {
   $user = new User;
   $current = $user->current($sid);
-  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
+  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
   $query = new \Peyote\Update($this->db_table());
   $query->set(['value' => $value])
         ->where('name', '=', $name);
   $this->db->fetch($query);
   return [
-   'message' => _('Setting updated')
+   'message' => 'Setting updated'
   ];
  }
 

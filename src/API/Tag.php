@@ -28,13 +28,13 @@ class Tag extends Base {
     $user = new User;
     if ( !$user->isLoggedIn($sid) ) throw new \Exception('Must be logged in to add a tag', 1032);
   }
-  if (strlen($name) < 1 OR $name == NULL) throw new \Exception(_('Tag name cannot be empty'));
-  if (strlen($image) !== 6) throw new \Exception(_('Invalid image UID'));
+  if (strlen($name) < 1 OR $name == NULL) throw new \Exception('Tag name cannot be empty');
+  if (strlen($image) !== 6) throw new \Exception('Invalid image UID');
   $tag = htmlspecialchars(trim(stripslashes($name)));
   $slug = $this->text2slug($tag);
-  if ($slug == '') throw new \Exception(_('Invalid tag name'), 1030);
+  if ($slug == '') throw new \Exception('Invalid tag name', 1030);
   $blacklist = new Blacklist;
-  if ($blacklist->check($slug)) throw new \Exception(_('Tag has been banned'), 1031);
+  if ($blacklist->check($slug)) throw new \Exception('Tag has been banned', 1031);
   $query = new \Peyote\Select('tag_list');
   $query->columns('id')
         ->where('basename', '=', $slug);
@@ -50,11 +50,11 @@ class Tag extends Base {
         ->where('value', '=', $tag_id)
         ->where('type', '=', 'tag');
   $result = $this->db->fetch($query);
-  if ($result) throw new \Exception(_('Tag already exists'));
+  if ($result) throw new \Exception('Tag already exists');
   $this->res->add('tag', $image, $sid, $tag_id, TRUE);
 
   return [
-   'message' => _('Tag added'),
+   'message' => 'Tag added',
    'tags' => $this->get($image)
   ];
  }
@@ -72,7 +72,7 @@ class Tag extends Base {
 
  public function get($value, $search_by='image') {
   $setting = new Setting;
-  if (!$value) throw new \Exception(_('Tag value not set'), 404);
+  if (!$value) throw new \Exception('Tag value not set', 404);
   switch ($search_by) {
    case 'name':
     $search_by = 'basename';
@@ -93,7 +93,7 @@ class Tag extends Base {
         ->where($search_by, '=', $value)
         ->where('resources.type', '=', 'tag');
   $results = $this->db->fetch($query);
-  if (!$results && $search_by == 'basename') throw new \Exception(_('No images with specified tag'), 404);
+  if (!$results && $search_by == 'basename') throw new \Exception('No images with specified tag', 404);
   foreach ($results as $i => $r) {
    $url = parse_url($setting->get('web_root'));
    $results[$i]['url'] = '/t/'.$r['basename'];
@@ -186,7 +186,7 @@ class Tag extends Base {
  public function remove($id, $uid, $sid = NULL) {
   $user = new User;
   $current = $user->current($sid);
-  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
+  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
 
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $uid)
@@ -195,7 +195,7 @@ class Tag extends Base {
   $this->db->fetch($query);
 
   return [
-   'message' => _('Removed tag from image')
+   'message' => 'Removed tag from image'
   ];
  }
 
@@ -213,7 +213,7 @@ class Tag extends Base {
  public function removeAll($id, $sid = NULL) {
   $user = new User;
   $current = $user->current($sid);
-  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
+  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
 
   $query = new \Peyote\Delete('resources');
   $query->where('value', '=', $id)
@@ -225,7 +225,7 @@ class Tag extends Base {
   $this->db->fetch($query);
 
   return [
-   'message' => _('Completely removed tag')
+   'message' => 'Completely removed tag'
   ];
  }
 
@@ -244,7 +244,7 @@ class Tag extends Base {
  public function rename($id, $name, $sid = NULL) {
   $user = new User;
   $current = $user->current($sid);
-  if ($current['type'] < 2) throw new \Exception(_('Must be an admin to access method'), 401);
+  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
 
   $query = new \Peyote\Update('tag_list');
   $query->set(['name' => $name])
@@ -252,7 +252,7 @@ class Tag extends Base {
   $this->db->fetch($query);
 
   return [
-   'message' => _('Tag name updated')
+   'message' => 'Tag name updated'
   ];
  }
 
@@ -286,8 +286,8 @@ class Tag extends Base {
  public function report($tag_id, $type, $sid = NULL) {
   $setting = new Setting;
   $site_name = $setting->get('web_root');
-  if (!isset($tag_id)) throw new \Exception(_('No tag specified'));
-  if (!isset($type)) throw new \Exception(_('No report type specified'));
+  if (!isset($tag_id)) throw new \Exception('No tag specified');
+  if (!isset($type)) throw new \Exception('No report type specified');
   //Add report
   $this->res->add('treport', NULL, $sid, $type, FALSE, $tag_id);
   //TODO: need a way to retrieve tag data by tag_id
@@ -295,7 +295,7 @@ class Tag extends Base {
   $data = [];
   $message->sendAdminMessage('New Reported Tag for '. $site_name, 'reported_tag', $data);
   return array(
-   'message' => _('Tag Reported')
+   'message' => 'Tag Reported'
   );
  }
 
