@@ -1,0 +1,3 @@
+ALTER TABLE  `users` ADD  `last_login` TIMESTAMP NULL ;
+
+ALTER TABLE  `sessions` ADD  `last_access` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL ;
