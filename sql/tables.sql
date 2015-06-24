@@ -31,7 +31,8 @@ INSERT INTO `report_types` (`id`, `value`, `public`) VALUES
 
 CREATE TABLE IF NOT EXISTS `sessions` (
   `user_id` int(8) unsigned NOT NULL,
-  `sid` varchar(16) character set utf8 collate utf8_bin NOT NULL,
+  `sid` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `last_access` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   KEY `sid` (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -51,13 +52,14 @@ CREATE TABLE IF NOT EXISTS `tag_list` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(8) unsigned NOT NULL auto_increment,
-  `username` varchar(32) collate utf8_unicode_ci NOT NULL,
-  `password` varchar(32) collate utf8_unicode_ci NOT NULL,
-  `salt` varchar(16) collate utf8_unicode_ci NOT NULL,
-  `email` varchar(255) collate utf8_unicode_ci NOT NULL,
-  `type` int(10) unsigned NOT NULL default '1',
-  PRIMARY KEY  (`id`),
+  `id` int(8) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `salt` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `type` int(10) unsigned NOT NULL DEFAULT '1',
+  `last_login` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
