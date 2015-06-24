@@ -120,6 +120,12 @@ class User extends Base {
      throw new \Exception($e);
     }
    }
+   $query = new \Peyote\Update('sessions');
+   $query->set([
+                'last_access' => date('Y-m-d H:i:s')
+               ])
+         ->where('sid', '=', $sid);
+   $this->db->fetch($query);
   }
   else {
    $current = FALSE;
@@ -159,8 +165,15 @@ class User extends Base {
   $sid = $this->getSecureID();
   $this->setCookie('sid', $sid);
   $query = new \Peyote\Insert('sessions');
-  $query->columns(['user_id', 'sid'])
-        ->values([$userdata['id'],$sid]);
+  $query->columns(['user_id', 'sid', 'last_access'])
+        ->values([$userdata['id'],$sid, date('Y-m-d H:i:s')]);
+  $this->db->fetch($query);
+  //update last access for in user table
+  $query = new \Peyote\Update('users');
+  $query->set([
+               'last_login' => date('Y-m-d H:i:s')
+              ])
+        ->where('username', '=', $username);
   $this->db->fetch($query);
   return array(
    'message' => 'Login successful',
