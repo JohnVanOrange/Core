@@ -2,6 +2,6 @@ vendor
 coverage-report
 error_log
 settings.inc
-.project
+*.project
 .idea
 *.DS_Store
