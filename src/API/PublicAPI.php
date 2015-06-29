@@ -22,9 +22,6 @@ class PublicAPI {
  public function output() {
   $api = new API;
 
-  header ('Content-type: application/json; charset=UTF-8');
-  header ('Access-Control-Allow-Origin: *');
-
   try {
    $result = $api->call($this->class.'/'.$this->method, $this->req);
   }
@@ -33,7 +30,7 @@ class PublicAPI {
   }
   if (!is_array($result)) $result = ['response' => $result];
 
-  echo json_encode($result);
+  return json_encode($result);
  }
 
  private function exceptionHandler($e) {
@@ -41,7 +38,7 @@ class PublicAPI {
    header("HTTP/1.0 ".$e->getCode());
    $_SERVER['REDIRECT_STATUS'] = $e->getCode();
   }
-  echo json_encode(array(
+  return json_encode(array(
    'error' => $e->getCode(),
    'message' => $e->getMessage()
   ));
