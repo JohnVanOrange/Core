@@ -16,4 +16,14 @@ class publicApiTest extends PHPUnit_Framework_TestCase {
 		$json = json_encode(['response' => TRUE]);
 		$this->assertJsonStringEqualsJsonString($result, $json, 'JSON did not match expected result');
 	}
+
+	public function test_call_reply() {
+		$publicApi = new JohnVanOrange\API\PublicAPI();
+		$publicApi->setClass('test');
+		$publicApi->setMethod('reply');
+		$publicApi->setRequest(['text' => "Test Message"]);
+		$result = $publicApi->output();
+		$json = json_encode(['response' => "Test Message"]);
+		$this->assertJsonStringEqualsJsonString($result, $json, 'JSON did not match expected result');
+	}
 }

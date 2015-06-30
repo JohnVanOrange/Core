@@ -20,4 +20,18 @@ class Test extends Base {
 		return TRUE;
 	}
 
+	/**
+	* Reply
+	*
+	* Replies back with the text sent
+	*
+	* @api
+	*
+	* @param string $text Text that is sent back in the response.
+	*/
+
+	public function reply($text) {
+		return $text;
+	}
+
 }

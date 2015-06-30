@@ -15,4 +15,9 @@ class testTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($result, 'Success did not return TRUE');
 	}
 
+	public function test_reply() {
+		$result = $this->test->reply(['text' => "Hello World"]);
+		$this->assertEquals("Hello World", $result['text'], 'Reply did not match');
+	}
+
 }
