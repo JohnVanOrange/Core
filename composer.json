@@ -16,7 +16,7 @@
   "source" : "https://github.com/cbulock/JohnVanOrange"
  },
  "require" : {
-  "php" : ">=5.4",
+  "php" : ">=5.5",
   "davewid/peyote": "0.7.*",
   "swiftmailer/swiftmailer": "5.*",
   "gavroche/browser": "2.2.*",
