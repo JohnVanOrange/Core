@@ -28,3 +28,20 @@ VALUES (
 'admin@example.com',
 '2'
 );
+/*S3 Storage*/
+INSERT INTO `storage` (
+	`id`, 
+	`type`, 
+	`endpoint`, 
+	`access_key`, 
+	`secret_key`, 
+	`bucket`
+) 
+VALUES (
+	2, 
+	's3',  
+	'objects.liquidweb.services', 
+	'7EFHD5Q4X9LZCQJAGNXQ', 
+	'5cnNywDvhOtUmKB+ZnWqSRj/flYGWr/7Xyhhe2eP', 
+	'jvodev'
+);
