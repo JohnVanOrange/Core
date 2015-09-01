@@ -302,6 +302,10 @@ class Image extends Base {
   }
   $filetypepart = explode('/',$info['mime']);
   $type = end($filetypepart);
+  if ($type === 'gif') {
+    unlink($path);
+    throw new \Exception('GIF format not currently allowed to be uploaded');
+  }
   $fullfilename = $path.'.'.$type;
   rename($path,$fullfilename);
   $filenamepart = explode('/',$fullfilename);

@@ -26,7 +26,7 @@ class PublicAPI {
    $result = $api->call($this->class.'/'.$this->method, $this->req);
   }
   catch(\Exception $e) {
-   $this->exceptionHandler($e);
+   $result = $this->exceptionHandler($e);
   }
   if (!is_array($result)) $result = ['response' => $result];
 
@@ -38,11 +38,10 @@ class PublicAPI {
    header("HTTP/1.0 ".$e->getCode());
    $_SERVER['REDIRECT_STATUS'] = $e->getCode();
   }
-  return json_encode(array(
+  return [
    'error' => $e->getCode(),
    'message' => $e->getMessage()
-  ));
-  die();
+  ];
  }
 
 }
