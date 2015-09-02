@@ -7,7 +7,7 @@ class User extends Base {
 
  public function __construct() {
   parent::__construct();
-  if (isset($_COOKIE['sid'])) $this->setSID($_COOKIE['sid']);
+  //if (isset($_COOKIE['sid'])) $this->setSID($_COOKIE['sid']);
  }
 
  private function getSecureID() {
@@ -18,10 +18,18 @@ class User extends Base {
   return md5($salt.$pass);
  }
 
- public function unAuthUser() {
-  if (isset($_COOKIE['session'])) {
-   $session = $_COOKIE['session'];
-  } else {
+ /**
+  * Get Unauthed Session
+  *
+  * Retrieves the session ID for an non-logged in user.
+  *
+  * @api
+  *
+  * @param string $session Session ID for non-logged in users. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+  */
+
+ public function unAuthUser($session = NULL) {
+  if (!$session) {
    $session = $this->setUnAuthUser();
   }
   return $session;

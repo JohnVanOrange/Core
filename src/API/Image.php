@@ -22,9 +22,10 @@ class Image extends Base {
   *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+  * @param string $session Session ID for non-logged in users. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
 
- public function like($image, $sid=NULL) {
+ public function like($image, $sid = NULL, $session = NULL) {
   if (!$image) throw new \Exception('Must provide image ID', 1040);
   $current = $this->user->current($sid);
   $query = new \Peyote\Delete('resources');
@@ -32,10 +33,10 @@ class Image extends Base {
         ->where('user_id', '=', $current['id'])
         ->where('type', '=', 'dislike');
   $this->db->fetch($query);
-  if (isset($_COOKIE['session'])) {
+  if ($session) {
    $query = new \Peyote\Delete('resources');
    $query->where('image', '=', $image)
-         ->where('unauth_user', '=', $_COOKIE['session'])
+         ->where('unauth_user', '=', $session)
          ->where('type', '=', 'dislike');
    $this->db->fetch($query);
   }
@@ -56,9 +57,10 @@ class Image extends Base {
   *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+  * @param string $session Session ID for non-logged in users. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   */
 
- public function dislike($image, $sid=NULL) {
+ public function dislike($image, $sid = NULL, $session = NULL) {
   if (!$image) throw new \Exception('Must provide image ID', 1040);
   $current = $this->user->current($sid);
   $query = new \Peyote\Delete('resources');
@@ -66,10 +68,10 @@ class Image extends Base {
         ->where('user_id', '=', $current['id'])
         ->where('type', '=', 'like');
   $this->db->fetch($query);
-  if (isset($_COOKIE['session'])) {
+  if ($session) {
    $query = new \Peyote\Delete('resources');
    $query->where('image', '=', $image)
-         ->where('unauth_user', '=', $_COOKIE['session'])
+         ->where('unauth_user', '=', $session)
          ->where('type', '=', 'like');
    $this->db->fetch($query);
   }
@@ -585,10 +587,11 @@ class Image extends Base {
   *
   * @param string $image The 6-digit id of an image.
   * @param string $sid Session ID that is provided when logged in. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
+  * @param string $session Session ID for non-logged in users. This is also set as a cookie. If sid cookie headers are sent, this value is not required.
   * @param bool $brazzify Should Brazzzify.me url be returned
   */
 
- public function get($image, $sid=NULL, $brazzify = FALSE) {
+ public function get($image, $sid = NULL, $session = NULL, $brazzify = FALSE) {
   $setting = new Setting;
   $current = $this->user->current($sid);
   //Get image data
@@ -652,10 +655,10 @@ class Image extends Base {
    }
    if ($data) $result['data'] = $data;
    if (isset($data['save'])) $result['saved'] = 1;
-  } elseif (isset($_COOKIE['session'])) {
+ } elseif ($session) {
    $query = new \Peyote\Select('resources');
    $query->where('image' ,'=', $result['uid'])
-         ->where('unauth_user', '=', $_COOKIE['session']);
+         ->where('unauth_user', '=', $session);
    $resources = $this->db->fetch($query);
    $data = NULL;
    foreach ($resources as $r) {
