@@ -335,8 +335,9 @@ class User extends Base {
   $user = $this->get($username, 'username');
   $uid = $this->getSecureID();
   // This has to manually add the resource as Resource/add doesn't have a way to specifiy a userID, it has to be derived from a SID.
+  $req = new \JohnVanOrange\Core\Request;
   $data = [
-   'ip' => $_SERVER['REMOTE_ADDR'],
+   'ip' => $req->ip(),
    'user_id' => $user['id'],
    'value' => $uid,
    'type' => 'pwreset',

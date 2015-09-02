@@ -148,7 +148,7 @@ class Image extends Base {
  public function approve($image, $sid=NULL, $nsfw=NULL) {
   $current = $this->user->current($sid);
   if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
-  if ($nsfw == TRUE) $nsfw = 1;
+  if ($nsfw === TRUE) $nsfw = 1;
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image)
         ->where('type', '=', 'report');

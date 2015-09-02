@@ -65,8 +65,7 @@ class Reddit extends Base {
   $valid = array(
    'jpg',
    'jpeg',
-   'png',
-   'gif'
+   'png'
   );
   return array_search(strtolower($last),$valid);
  }
@@ -86,7 +85,7 @@ class Reddit extends Base {
  }
 
  private function isImgurAlbum($post) {
-  if (strpos($post['data']['url'],'imgur.com/a/') == TRUE) throw new \Exception('Imgur album',200);
+  if (strpos($post['data']['url'],'imgur.com/a/') === TRUE) throw new \Exception('Imgur album',200);
   return TRUE;
  }
 

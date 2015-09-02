@@ -20,10 +20,9 @@ class Resource extends Base {
    $unauth_user = $this->user->unAuthUser();
   }
 
-  $ip = '';
-  if (isset($_SERVER['REMOTE_ADDR'])) $ip = $_SERVER['REMOTE_ADDR'];
+  $req = new \JohnVanOrange\Core\Request;
   $data = [
-   'ip' => $ip,
+   'ip' => $req->ip(),
    'image' => $image,
    'user_id' => $user_id,
    'value' => $value,
