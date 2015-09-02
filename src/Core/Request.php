@@ -4,9 +4,7 @@ namespace JohnVanOrange\Core;
 class Request {
 
 	public function ip() {
-		$ip = '';
-		if (isset($_SERVER['REMOTE_ADDR'])) $ip = $_SERVER['REMOTE_ADDR'];
-		return $ip;
+		return filter_input(INPUT_SERVER, 'REMOTE_ADDR');
 	}
 
 }
