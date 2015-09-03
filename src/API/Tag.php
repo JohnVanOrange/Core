@@ -3,11 +3,8 @@ namespace JohnVanOrange\API;
 
 class Tag extends Base {
 
- private $res;
-
  public function __construct() {
   parent::__construct();
-  $this->res = new Resource;
  }
 
  /**
@@ -51,7 +48,10 @@ class Tag extends Base {
         ->where('type', '=', 'tag');
   $result = $this->db->fetch($query);
   if ($result) throw new \Exception('Tag already exists');
-  $this->res->add('tag', $image, $sid, $tag_id, TRUE);
+
+  $res = new \JohnVanOrange\Core\Resource('tag', $sid);
+  $res->setImage($image)->setValue($tag_id)->setPublic();
+  $res->add();
 
   return [
    'message' => 'Tag added',
@@ -289,7 +289,9 @@ class Tag extends Base {
   if (!isset($tag_id)) throw new \Exception('No tag specified');
   if (!isset($type)) throw new \Exception('No report type specified');
   //Add report
-  $this->res->add('treport', NULL, $sid, $type, FALSE, $tag_id);
+  $res = new \JohnVanOrange\Core\Resource('treport', $sid);
+  $res->setTag($tag_id)->setValue($type);
+  $res->add();
   //TODO: need a way to retrieve tag data by tag_id
   $message = new Mail();
   $data = [];
