@@ -5,12 +5,10 @@ use Imagick;
 class Image extends Base {
 
  private $user;
- private $res;
 
  public function __construct() {
   parent::__construct();
   $this->user = new User;
-  $this->res = new Resource;
  }
 
  /**
@@ -40,7 +38,9 @@ class Image extends Base {
          ->where('type', '=', 'dislike');
    $this->db->fetch($query);
   }
-  $this->res->add('like', $image, $sid);
+  $res = new \JohnVanOrange\Core\Resource('like', $sid);
+  $res->setImage($image);
+  $res->add();
   return array(
    'message' => 'Image liked',
    'liked' => 1,
@@ -75,7 +75,9 @@ class Image extends Base {
          ->where('type', '=', 'like');
    $this->db->fetch($query);
   }
-  $this->res->add('dislike', $image, $sid);
+  $res = new \JohnVanOrange\Core\Resource('dislike', $sid);
+  $res->setImage($image);
+  $res->add();
   return array(
    'message' => 'Image disliked',
    'liked' => 0,
@@ -98,7 +100,9 @@ class Image extends Base {
   if (!$image) throw new \Exception('Must provide image ID', 1040);
   $current = $this->user->current($sid);
   if (!$current) throw new \Exception('Must be logged in to favorite images',1020);
-  $this->res->add('save', $image, $sid);
+  $res = new \JohnVanOrange\Core\Resource('save', $sid);
+  $res->setImage($image);
+  $res->add();
   return array(
    'message' => 'Image favorited',
    'saved' => 1,
@@ -147,7 +151,7 @@ class Image extends Base {
 
  public function approve($image, $sid=NULL, $nsfw=NULL) {
   $current = $this->user->current($sid);
-  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
+  if ($current['type'] < 2) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
   if ($nsfw === TRUE) $nsfw = 1;
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image)
@@ -199,7 +203,7 @@ class Image extends Base {
   */
 
  public function remove($image, $sid=NULL) {
-  if (!$this->canRemove($image, $sid)) throw new \Exception("You don't have permission to remove this image", 401);
+  if (!$this->canRemove($image, $sid)) throw new \JohnVanOrange\Core\Exception\NotAllowed('You don\'t have permission to remove this image', 401);
   $data = $this->get($image);
   //clean up resources
   $query = new \Peyote\Delete('resources');
@@ -300,7 +304,7 @@ class Image extends Base {
   $info = getimagesize($path);
   if (!$info) {
    unlink($path);
-   throw new \Exception('Not a valid image',1100);
+   throw new \JohnVanOrange\Core\Exception\Invalid('Not a valid image',1100);
   }
   $filetypepart = explode('/',$info['mime']);
   $type = end($filetypepart);
@@ -355,7 +359,9 @@ class Image extends Base {
   }
   else {
    //upload resource
-   $this->res->add('upload', $uid, $sid, NULL, TRUE);
+   $res = new \JohnVanOrange\Core\Resource('upload', $sid);
+   $res->setImage($uid)->setPublic();
+   $res->add();
    return array(
     'url' => $web_root . $uid,
     'uid' => $uid,
@@ -403,7 +409,9 @@ class Image extends Base {
   if (!isset($image)) throw new \Exception('No image specified');
   if (!isset($type)) throw new \Exception('No report type specified');
   //Add report
-  $this->res->add('report', $image, $sid, $type);
+  $res = new \JohnVanOrange\Core\Resource('report', $sid);
+  $res->setImage($image)->setValue($type);
+  $res->add();
   //Hide image
   $query = new \Peyote\Update('images');
   $query->set(['display' => 0])
@@ -433,14 +441,14 @@ class Image extends Base {
 
  public function reported($sid=NULL) {
   $current = $this->user->current($sid);
-  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
+  if ($current['type'] < 2) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
   $query = new \Peyote\Select('resources');
   $query->where('type', '=', 'report')
         ->orderBy('RAND()')
         ->limit(1);
   $report_result = $this->db->fetch($query);
   $image_result = $this->get($report_result[0]['image']);
-  if (!$image_result) throw new \Exception('No image result', 404);
+  if (!$image_result) throw new \JohnVanOrange\Core\Exception\NotFound('No image result', 404);
   return $image_result;
  }
 
@@ -456,7 +464,7 @@ class Image extends Base {
 
  public function unapproved($sid=NULL) {
   $current = $this->user->current($sid);
-  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
+  if ($current['type'] < 2) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
   $query = new \Peyote\Select('images');
   $query->columns('uid')
         ->where('approved', '=', 0)
@@ -464,7 +472,7 @@ class Image extends Base {
         ->limit(1);
   $image = $this->db->fetch($query);
   $image_result = $this->get($image[0]['uid']);
-  if (!$image_result) throw new \Exception('No image result', 404);
+  if (!$image_result) throw new \JohnVanOrange\Core\Exception\NotFound('No image result', 404);
   return $image_result;
  }
 
@@ -568,11 +576,11 @@ class Image extends Base {
   $query->where('uid', '=', $image)
         ->limit(1);
   $result = $this->db->fetch($query);
-  if (!$result) throw new \Exception('Image not found', 404);
+  if (!$result) throw new \JohnVanOrange\Core\Exception\NotFound('Image not found', 404);
   $result = $result[0];
   $media = new Media;
   $result['media'] = $media->get($image);
-  if (!$result['display']) throw new \Exception('Image removed', 403); //need to be modified to allow admins if intergrated into image/get
+  if (!$result['display']) throw new \JohnVanOrange\Core\Exception\Forbidden('Image removed', 403); //need to be modified to allow admins if intergrated into image/get
   $setting = new Setting;
   $result['page_url'] = $setting->get('web_root') . $result['uid'];
   return $result;
@@ -609,12 +617,12 @@ class Image extends Base {
    if ($result) {
     return ['merged_to' => $result[0]['image']];
    } else {
-    throw new \Exception('Image not found', 404);
+    throw new \JohnVanOrange\Core\Exception\NotFound('Image not found', 404);
    }
   }
   $result = $result[0];
   //Verify image isn't supposed to be hidden
-  if (!$result['display'] AND !$this->user->isAdmin($sid)) throw new \Exception('Image removed', 403);
+  if (!$result['display'] AND !$this->user->isAdmin($sid)) throw new \JohnVanOrange\Core\Exception\Forbidden('Image removed', 403);
   //Get media data
   $media = new Media;
   $result['media'] = $media->get($image);
@@ -771,7 +779,7 @@ class Image extends Base {
 
  public function merge($image1, $image2, $sid=NULL) {
   $image = new Image();
-  if (!$this->user->isAdmin($sid)) throw new \Exception('Must be an admin to access method', 401);
+  if (!$this->user->isAdmin($sid)) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
   $image1 = $image->get($image1);
   $image2 = $image->get($image2);
   $primary = $image1; $sec = $image2;
@@ -780,8 +788,11 @@ class Image extends Base {
    $primary = $image2;
    $sec = $image1;
   }
-  $this->res->merge($primary['uid'], $sec['uid']);
-  $this->res->add('merge', $primary['uid'], $sid, $sec['uid'], TRUE);
+  $res = new Resource;
+  $res->merge($primary['uid'], $sec['uid']);
+  $res = new \JohnVanOrange\Core\Resource('merge', $sid);
+  $res->setImage($primary['uid'])->setValue($sec['uid'])->setPublic();
+  $res->add();
   $this->remove($sec['uid']);
   return [
    'message' => 'Images merged',

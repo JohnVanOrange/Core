@@ -38,7 +38,7 @@ class Resource extends Base {
  }
 
  public function merge($to, $from) {
-  if (!$this->user->isAdmin()) throw new \Exception('Must be an admin to access method', 401);
+  if (!$this->user->isAdmin()) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
   $query = new \Peyote\Update('resources');
   $query->set(['image' => $to])
         ->where('image', '=', $from);

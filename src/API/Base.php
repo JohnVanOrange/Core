@@ -11,7 +11,7 @@ class Base {
  }
 
  public function __call($name, $args) {
-  throw new \Exception('Invalid method' . ' ' . $name);
+  throw new \JohnVanOrange\Core\Exception\Invalid('Invalid method' . ' ' . $name);
  }
 
  protected function remoteFetch($url, $headers=NULL) {

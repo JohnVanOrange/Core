@@ -34,9 +34,9 @@ class PublicAPI {
  }
 
  private function exceptionHandler($e) {
-  if ($e->getCode() == 403 || $e->getCode() == 404) {
-   header("HTTP/1.0 ".$e->getCode());
-   $_SERVER['REDIRECT_STATUS'] = $e->getCode();
+  if (method_exists($e, 'getHttpStatus')) {
+    $status = $e->getHttpStatus();
+    header("HTTP/1.0 " . $status);
   }
   return [
    'error' => $e->getCode(),

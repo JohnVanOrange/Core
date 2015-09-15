@@ -26,7 +26,7 @@ class Tag extends Base {
     if ( !$user->isLoggedIn($sid) ) throw new \Exception('Must be logged in to add a tag', 1032);
   }
   if (strlen($name) < 1 OR $name == NULL) throw new \Exception('Tag name cannot be empty');
-  if (strlen($image) !== 6) throw new \Exception('Invalid image UID');
+  if (strlen($image) !== 6) throw new \JohnVanOrange\Core\Exception\Invalid('Invalid image UID');
   $tag = htmlspecialchars(trim(stripslashes($name)));
   $slug = $this->text2slug($tag);
   if ($slug == '') throw new \Exception('Invalid tag name', 1030);
@@ -72,7 +72,7 @@ class Tag extends Base {
 
  public function get($value, $search_by='image') {
   $setting = new Setting;
-  if (!$value) throw new \Exception('Tag value not set', 404);
+  if (!$value) throw new \JohnVanOrange\Core\Exception\NotFound('Tag value not set', 404);
   switch ($search_by) {
    case 'name':
     $search_by = 'basename';
@@ -93,7 +93,7 @@ class Tag extends Base {
         ->where($search_by, '=', $value)
         ->where('resources.type', '=', 'tag');
   $results = $this->db->fetch($query);
-  if (!$results && $search_by == 'basename') throw new \Exception('No images with specified tag', 404);
+  if (!$results && $search_by == 'basename') throw new \JohnVanOrange\Core\Exception\NotFound('No images with specified tag', 404);
   foreach ($results as $i => $r) {
    $url = parse_url($setting->get('web_root'));
    $results[$i]['url'] = '/t/'.$r['basename'];
@@ -186,7 +186,7 @@ class Tag extends Base {
  public function remove($id, $uid, $sid = NULL) {
   $user = new User;
   $current = $user->current($sid);
-  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
+  if ($current['type'] < 2) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
 
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $uid)
@@ -213,7 +213,7 @@ class Tag extends Base {
  public function removeAll($id, $sid = NULL) {
   $user = new User;
   $current = $user->current($sid);
-  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
+  if ($current['type'] < 2) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
 
   $query = new \Peyote\Delete('resources');
   $query->where('value', '=', $id)
@@ -244,7 +244,7 @@ class Tag extends Base {
  public function rename($id, $name, $sid = NULL) {
   $user = new User;
   $current = $user->current($sid);
-  if ($current['type'] < 2) throw new \Exception('Must be an admin to access method', 401);
+  if ($current['type'] < 2) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
 
   $query = new \Peyote\Update('tag_list');
   $query->set(['name' => $name])

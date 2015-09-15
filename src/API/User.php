@@ -168,7 +168,7 @@ class User extends Base {
   if (!isset($userdata[0])) throw new \Exception('User not found');
   $userdata = $userdata[0];
   $pwhash = $this->passhash($password,$userdata['salt']);
-  if ($pwhash != $userdata['password']) throw new \Exception('Invalid password');
+  if ($pwhash != $userdata['password']) throw new \JohnVanOrange\Core\Exception\Invalid('Invalid password');
   //succesfully login
   $sid = $this->getSecureID();
   $this->setCookie('sid', $sid);
