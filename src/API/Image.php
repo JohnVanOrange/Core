@@ -204,7 +204,7 @@ class Image extends Base {
 
  public function remove($image, $sid=NULL) {
   if (!$this->canRemove($image, $sid)) throw new \JohnVanOrange\Core\Exception\NotAllowed('You don\'t have permission to remove this image', 401);
-  $data = $this->get($image);
+  $data = $this->get($image, $sid);
   //clean up resources
   $query = new \Peyote\Delete('resources');
   $query->where('image', '=', $image);
