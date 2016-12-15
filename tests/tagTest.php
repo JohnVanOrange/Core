@@ -22,7 +22,7 @@ class tagTest extends PHPUnit_Framework_TestCase {
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->setting->update('tags_need_auth', 0, $admin);
   //test
-  $image_url = 'http://jvo.io/icons/lips/30.png';
+  $image_url = 'https://jvo.io/icons/lips/30.png';
   $image = $this->image->addFromURL($image_url);
   $tag = $this->tag->add('random tag', $image['uid']);
   $this->assertEquals('random tag', $tag['tags'][0]['name'], 'Add tag results don\'t list newly added tag.');
@@ -35,7 +35,7 @@ class tagTest extends PHPUnit_Framework_TestCase {
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->setting->update('tags_need_auth', 1, $admin);
   //test
-  $image_url = 'http://jvo.io/icons/lips/30.png';
+  $image_url = 'https://jvo.io/icons/lips/30.png';
   $image = $this->image->addFromURL($image_url);
   $user = $this->user->login('testuser', 'testpass')['sid'];
   $tag = $this->tag->add('random tag', $image['uid'], $user);
@@ -49,7 +49,7 @@ class tagTest extends PHPUnit_Framework_TestCase {
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->setting->update('tags_need_auth', 1, $admin);
   //test
-  $image_url = 'http://jvo.io/icons/lips/30.png';
+  $image_url = 'https://jvo.io/icons/lips/30.png';
   $image = $this->image->addFromURL($image_url);
   try {
     $tag = $this->tag->add('random tag', $image['uid']);
@@ -67,7 +67,7 @@ class tagTest extends PHPUnit_Framework_TestCase {
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->setting->update('tags_need_auth', 0, $admin);
   //test
-  $image_url = 'http://jvo.io/icons/lips/30.png';
+  $image_url = 'https://jvo.io/icons/lips/30.png';
   $image = $this->image->addFromURL($image_url);
   $this->tag->add('random tag', $image['uid']);
    try {
@@ -88,7 +88,7 @@ class tagTest extends PHPUnit_Framework_TestCase {
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
   $this->setting->update('tags_need_auth', 0, $admin);
   //test
-  $image_url = 'http://jvo.io/icons/lips/30.png';
+  $image_url = 'https://jvo.io/icons/lips/30.png';
   $image = $this->image->addFromURL($image_url);
   $this->tag->add('other tag', $image['uid']);
   $tags = $this->tag->get($image['uid']);

@@ -17,13 +17,13 @@ class imageFilterTest extends PHPUnit_Framework_TestCase {
 	public function test_count() {
 		//setup
 		$user = $this->user->login('testuser', 'testpass')['sid'];
-		$image_url = 'http://jvo.io/icons/lips/16.png';
+		$image_url = 'https://jvo.io/icons/lips/16.png';
 		$image1 = $this->image->addFromURL($image_url, NULL, $user);
-		$image_url = 'http://jvo.io/icons/lips/32.png';
+		$image_url = 'https://jvo.io/icons/lips/32.png';
 		$image2 = $this->image->addFromURL($image_url, NULL, $user);
-		$image_url = 'http://jvo.io/icons/lips/36.png';
+		$image_url = 'https://jvo.io/icons/lips/36.png';
 		$image3 = $this->image->addFromURL($image_url, NULL, $user);
-		$image_url = 'http://jvo.io/icons/lips/64.png';
+		$image_url = 'https://jvo.io/icons/lips/64.png';
 		$image4 = $this->image->addFromURL($image_url, NULL, $user);
 		//test
 		$options = [
