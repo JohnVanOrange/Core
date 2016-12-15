@@ -447,7 +447,7 @@ class Image extends Base {
         ->orderBy('RAND()')
         ->limit(1);
   $report_result = $this->db->fetch($query);
-  $image_result = $this->get($report_result[0]['image']);
+  $image_result = $this->get($report_result[0]['image'], $sid);
   if (!$image_result) throw new \JohnVanOrange\Core\Exception\NotFound('No image result', 404);
   return $image_result;
  }
