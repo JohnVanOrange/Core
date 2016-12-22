@@ -81,7 +81,7 @@ class Reddit extends Base {
  }
 
  private function getSubreddit($subreddit) {
-  return json_decode($this->remoteFetch('http://www.reddit.com/r/'.$subreddit.'.json?limit=100'),TRUE);
+  return json_decode($this->remoteFetch('https://www.reddit.com/r/'.$subreddit.'.json?limit=100'),TRUE);
  }
 
  private function isImgurAlbum($post) {
