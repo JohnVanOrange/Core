@@ -29,7 +29,7 @@ class imageTest extends PHPUnit_Framework_TestCase {
  
  /**** remove ****/
  public function test_addfromurl_remove() {
-  $image_url = 'https://jvo.io/icons/orange_slice/64.png';
+  $image_url = 'https://jvo.io/icons/orange_slice/114.png';
   $image = $this->image->addFromURL($image_url);
   $this->assertArrayHasKey('uid', $image, 'UID missing from results.');
   $admin = $this->user->login('adminuser', 'testpass')['sid'];
@@ -69,6 +69,22 @@ class imageTest extends PHPUnit_Framework_TestCase {
     return;
    }
    $this->fail('An expected exception has not been raised.');
+ }
+
+ //there was an issue where reported images couldn't be removed
+ public function test_remove_when_reported() {
+  $image_url = 'https://jvo.io/icons/orange_slice/152.png';
+  $image = $this->image->addFromURL($image_url);
+  $admin = $this->user->login('adminuser', 'testpass')['sid'];
+  $this->image->report($image['uid'], '1');
+  $this->image->remove($image['uid'], $admin);
+  try {
+   $this->image->get($image['uid']);
+  }
+  catch (Exception $e) {
+   return;
+  }
+  $this->fail('An expected exception has not been raised.');
  }
 
  /**** like ****/

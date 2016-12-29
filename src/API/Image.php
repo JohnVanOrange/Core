@@ -184,7 +184,7 @@ class Image extends Base {
 
  public function canRemove($image, $sid=NULL) {
    $current_id = $this->user->current($sid)['id'];
-   $data = $this->get($image);
+   $data = $this->get($image, $sid);
    $uploader = 'invalid';
    if (isset($data['uploader']['id'])) $uploader = $data['uploader']['id'];
    if (!$this->user->isAdmin($sid) AND ($current_id != $uploader)) return FALSE;
@@ -780,8 +780,8 @@ class Image extends Base {
  public function merge($image1, $image2, $sid=NULL) {
   $image = new Image();
   if (!$this->user->isAdmin($sid)) throw new \JohnVanOrange\Core\Exception\NotAllowed('Must be an admin to access method', 401);
-  $image1 = $image->get($image1);
-  $image2 = $image->get($image2);
+  $image1 = $image->get($image1, $sid);
+  $image2 = $image->get($image2, $sid);
   $primary = $image1; $sec = $image2;
   //check total image area, assume the largest is the one to keep
   if (($image2['height']*$image2['width']) > ($image2['height']*$image2['width'])) {
