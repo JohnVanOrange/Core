@@ -113,4 +113,38 @@ class imageTest extends PHPUnit_Framework_TestCase {
   $this->image->remove($image['uid'], $admin);
  }
 
+ /**** save and unsave ****/
+ public function test_save() {
+  $image_url = 'https://jvo.io/icons/orange_slice/16.png';
+  $image = $this->image->addFromURL($image_url);
+  $user = $this->user->login('testuser', 'testpass')['sid'];
+  $this->image->save($image['uid'], $user);
+  $result = $this->image->get($image['uid'], $user);
+  $this->assertArrayHasKey('save', $result['data'], 'Save data missing from results.');
+  $this->image->unsave($image['uid'], $user);
+  $result = $this->image->get($image['uid'], $user);
+  $this->assertArrayNotHasKey('data', $result, 'Save data should be missing from results.');
+  //cleanup
+  $admin = $this->user->login('adminuser', 'testpass')['sid'];
+  $this->image->remove($image['uid'], $admin);
+ }
+
+  /**** stats ****/
+ public function test_stats() {
+  $stats = $this->image->stats();
+  $this->assertArrayHasKey('images', $stats, 'Image data missing from stats.');
+  $this->assertArrayHasKey('reports', $stats, 'Report data missing from stats.');
+  $this->assertArrayHasKey('approved', $stats, 'Approved data missing from stats.');
+ }
+
+ /**** approve ****/
+ public function test_approve() {
+  $image_url = 'https://jvo.io/icons/orange_slice/114.png';
+  $image = $this->image->addFromURL($image_url);
+  $admin = $this->user->login('adminuser', 'testpass')['sid'];
+  $this->image->approve($image['uid'], $admin);
+  $result = $this->image->get($image['uid'], $admin);
+  $this->assertEquals('1', $result['approved'], 'Approve status incorrect.');
+ }
+
 }
